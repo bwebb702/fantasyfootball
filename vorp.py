@@ -1,8 +1,10 @@
+#chatgpt
+
 import pandas as pd
 
-FILE_2025 = r"C:\Users\savet\Desktop\sportsref_2025.csv"
-FILE_2024 = r"C:\Users\savet\Desktop\sportsref_2024.csv"
-FILE_2023 = r"C:\Users\savet\Desktop\sportsref_2023.csv"
+FILE_2025 = r"C:\Brian\Python Projects\FantasyFootball\data\sportsref_2025.csv"
+FILE_2024 = r"C:\Brian\Python Projects\FantasyFootball\data\sportsref_2024.csv"
+FILE_2023 = r"C:\Brian\Python Projects\FantasyFootball\data\sportsref_2023.csv"
 
 OUTPUT_FILE = "fantasy_draft_rankings.html"
 
