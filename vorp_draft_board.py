@@ -648,6 +648,43 @@ h2 {{
 
 
 /* ========================================================
+   DRAFTED TAKES PRIORITY OVER PICKED
+   ======================================================== */
+/*
+   If a row is both green (rank clicked) and drafted (name clicked),
+   gray-with-strikethrough should win. Both single-class rules above
+   use !important with equal specificity, so without this the rule
+   defined later in the file would silently win instead. This
+   two-class selector has higher specificity than either one alone,
+   so it wins regardless of click order or CSS source order.
+*/
+
+#draftTable tbody tr.rank-picked.player-drafted {{
+
+    background-color: #111111 !important;
+
+    color: #666666 !important;
+
+}}
+
+
+#draftTable tbody tr.rank-picked.player-drafted td {{
+
+    color: #666666 !important;
+
+    text-decoration: line-through;
+
+}}
+
+
+#draftTable tbody tr.rank-picked.player-drafted:hover {{
+
+    background-color: #111111 !important;
+
+}}
+
+
+/* ========================================================
    PLAYER NAME
    ======================================================== */
 
