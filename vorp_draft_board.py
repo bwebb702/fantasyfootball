@@ -1,4 +1,4 @@
-#claude 20260831
+#claude 20260902
 import re
 import pandas as pd
 
@@ -30,7 +30,37 @@ MIN_GAMES_FOR_BASELINE = 8
 # Final table size, keeping the highest 2025 VORP players.
 MAX_PLAYERS = 300
 
+# Weighting method for the 3-year "Historical" VORP calculation.
+#   "none"        - plain unweighted sum across all 3 seasons
+#   "tiered"      - each season scaled by a fixed weight (TIERED_WEIGHTS)
+#   "exponential" - each season scaled by DECAY ** years_ago
+#
+# Either weighted option leans the 3-year PPG toward more recent
+# performance instead of treating a 2023 game exactly like a 2025
+# game. A season is still weighted by its own actual games played, so
+# a tiny recent sample can't swamp a full season from a prior year --
+# weight only affects how much a season's games count once they're in
+# the pool, not whether a small sample looks artificially large.
+WEIGHTING_METHOD = "tiered"
+
+# Used when WEIGHTING_METHOD = "tiered".
+TIERED_WEIGHTS = {"2025": 3, "2024": 2, "2023": 1}
+
+# Used when WEIGHTING_METHOD = "exponential". 2025 = DECAY**0 = 1.0,
+# 2024 = DECAY**1, 2023 = DECAY**2. Lower DECAY = faster falloff
+# (older seasons count for less).
+EXPONENTIAL_DECAY = 0.65
+
 SUFFIXES = {"jr", "sr", "ii", "iii", "iv", "v"}
+
+
+def get_season_weight(season_label, years_ago):
+    if WEIGHTING_METHOD == "tiered":
+        return TIERED_WEIGHTS[season_label]
+    elif WEIGHTING_METHOD == "exponential":
+        return EXPONENTIAL_DECAY ** years_ago
+    else:
+        return 1
 
 
 # ============================================================
@@ -107,10 +137,14 @@ def process_adp(file_path):
 
     def clean_name(name):
         name = re.sub(r"\s*\([^)]*\)\s*$", "", str(name)).strip()
-        name = re.sub(r"\s+[A-Z]{2,4}$", "", name).strip()
-        return name
 
-    df["Player"] = df["Name"].apply(clean_name)
+        team_match = re.search(r"\s+([A-Z]{2,4})$", name)
+        team = team_match.group(1) if team_match else ""
+
+        name = re.sub(r"\s+[A-Z]{2,4}$", "", name).strip()
+        return pd.Series({"Player": name, "Team": team})
+
+    df[["Player", "Team"]] = df["Name"].apply(clean_name)
     df["Name_Key"] = df["Player"].apply(normalize_name)
 
     # POS.RK combines position + position rank, e.g. "RB12". Pos is
@@ -127,7 +161,7 @@ def process_adp(file_path):
     # Keep the best (lowest) ADP if a player appears more than once.
     df = df.sort_values("ADP_Sort").drop_duplicates(subset=["Name_Key", "Pos"], keep="first")
 
-    return df[["Name_Key", "Player", "Pos", "Pos_Display", "ADP", "ADP_Sort"]].reset_index(drop=True)
+    return df[["Name_Key", "Player", "Pos", "Pos_Display", "Team", "ADP", "ADP_Sort"]].reset_index(drop=True)
 
 
 # ============================================================
@@ -190,13 +224,33 @@ current_output = current_vorp[
 # COMBINE THREE SEASONS
 # ============================================================
 #
-# Total PPR and total games are summed across the three seasons, so
-# Historical PPG = (PPR25+PPR24+PPR23) / (G25+G24+G23), using actual
-# games played.
+# With WEIGHTING_METHOD = "none", this is a plain sum across the three
+# seasons: Historical PPG = (PPR25+PPR24+PPR23) / (G25+G24+G23).
 #
-df_hist = pd.concat([df_2025, df_2024, df_2023], ignore_index=True)
-df_hist = df_hist.groupby(["Name_Key", "Player", "Pos"], as_index=False).agg(G=("G", "sum"), PPR=("PPR", "sum"))
-df_hist["PPG"] = df_hist["PPR"] / df_hist["G"]
+# With "tiered" or "exponential", each season's PPR and games are
+# scaled by get_season_weight() before summing, so Historical PPG
+# becomes a weighted average favoring more recent seasons.
+#
+season_frames = [
+    (df_2025, "2025", 0),
+    (df_2024, "2024", 1),
+    (df_2023, "2023", 2),
+]
+
+for df, season_label, years_ago in season_frames:
+    df["Weight"] = get_season_weight(season_label, years_ago)
+
+df_hist = pd.concat([df for df, _, _ in season_frames], ignore_index=True)
+df_hist["Weighted_PPR"] = df_hist["PPR"] * df_hist["Weight"]
+df_hist["Weighted_G"] = df_hist["G"] * df_hist["Weight"]
+
+df_hist = df_hist.groupby(["Name_Key", "Player", "Pos"], as_index=False).agg(
+    G=("G", "sum"),
+    PPR=("PPR", "sum"),
+    Weighted_PPR=("Weighted_PPR", "sum"),
+    Weighted_G=("Weighted_G", "sum"),
+)
+df_hist["PPG"] = df_hist["Weighted_PPR"] / df_hist["Weighted_G"]
 
 historical_vorp = find_baseline(df_hist, BASELINES, prefix="Historical_")
 
@@ -218,6 +272,7 @@ ranked_df = pd.merge(ranked_df, adp_df, on=["Name_Key", "Pos"], how="outer", ind
 ranked_df = coalesce_player_columns(ranked_df)
 ranked_df["Is_New_Player"] = ranked_df["_merge"] == "right_only"
 ranked_df = ranked_df.drop(columns=["_merge"])
+ranked_df = ranked_df[ranked_df["ADP_Sort"] > 0]
 
 # ============================================================
 # DROP PLAYERS WITH NO 2025 DATA, UNLESS THEY'RE IN THE ADP FILE
@@ -266,7 +321,7 @@ ranked_df["Draft_Rank"] = ranked_df.index + 1
 # OUTPUT COLUMNS
 # ============================================================
 output_cols = [
-    "Draft_Rank", "Player", "Pos", "ADP",
+    "Draft_Rank", "Player", "Team", "Pos", "ADP",
     "Current_G", "Current_PPR", "Current_PPG", "Current_Baseline_PPG", "Current_VORP",
     "Historical_G", "Historical_PPG", "Historical_Baseline_PPG", "Historical_VORP",
 ]
@@ -281,9 +336,9 @@ final_output = ranked_df[
 final_output = final_output.rename(columns={
     "Draft_Rank": "Rank",
     "Current_G": "2025 GP", "Current_PPR": "2025 PPR", "Current_PPG": "2025 PPG",
-    "Current_Baseline_PPG": "2025 Replacement PPG", "Current_VORP": "2025 VORP",
+    "Current_Baseline_PPG": "2025 Baseline PPG", "Current_VORP": "2025 VORP",
     "Historical_G": "3-Year GP", "Historical_PPG": "3-Year PPG",
-    "Historical_Baseline_PPG": "3-Year Replacement PPG", "Historical_VORP": "3-Year VORP",
+    "Historical_Baseline_PPG": "3-Year Baseline PPG", "Historical_VORP": "3-Year VORP",
 })
 
 # ============================================================
@@ -323,7 +378,7 @@ if len(row_chunks) == len(is_new_flags) == len(pos_keys):
     html_table = table_head + "<tbody>" + "".join(styled_rows) + "</tbody>" + table_tail
 
 # ============================================================
-# HTML
+# HTML 8fffa8 0f3d1f
 # ============================================================
 html_content = f"""
 <!DOCTYPE html>
@@ -509,6 +564,20 @@ h2 {{
 }}
 
 
+.print-button {{
+
+    background-color: #15803d;
+
+}}
+
+
+.print-button:hover {{
+
+    background-color: #166534;
+
+}}
+
+
 /* ========================================================
    TABLE
    ======================================================== */
@@ -646,6 +715,32 @@ h2 {{
 
 }}
 
+/* ========================================================
+   SLEEPER (click the position)
+   ======================================================== */
+
+#draftTable tbody tr.sleeper-picked {{
+
+    background-color: #6E3700 !important;
+
+    color: #D96D00 !important;
+
+}}
+
+
+#draftTable tbody tr.sleeper-picked td {{
+
+    color: #D96D00 !important;
+
+}}
+
+
+#draftTable tbody tr.sleeper-picked:hover {{
+
+    background-color: #6E3700 !important;
+
+}}
+
 
 /* ========================================================
    DRAFTED TAKES PRIORITY OVER PICKED
@@ -658,6 +753,28 @@ h2 {{
    two-class selector has higher specificity than either one alone,
    so it wins regardless of click order or CSS source order.
 */
+
+#draftTable tbody tr.sleeper-picked.rank-picked {{
+
+    background-color: #0f3d1f !important;
+
+    color: #8fffa8 !important;
+
+}}
+
+
+#draftTable tbody tr.sleeper-picked.rank-picked td {{
+
+    color: #8fffa8 !important;
+
+}}
+
+
+#draftTable tbody tr.sleeper-picked.rank-picked:hover {{
+
+    background-color: #0f3d1f !important;
+
+}}
 
 #draftTable tbody tr.rank-picked.player-drafted {{
 
@@ -683,40 +800,59 @@ h2 {{
 
 }}
 
+#draftTable tbody tr.sleeper-picked.player-drafted {{
+
+    background-color: #111111 !important;
+
+    color: #666666 !important;
+
+}}
+
+
+#draftTable tbody tr.sleeper-picked.player-drafted td {{
+
+    color: #666666 !important;
+
+    text-decoration: line-through;
+
+}}
+
+
+#draftTable tbody tr.sleeper-picked.player-drafted:hover {{
+
+    background-color: #111111 !important;
+}}
+
 
 /* ========================================================
    PLAYER NAME
    ======================================================== */
 
 .player-name {{
-
     cursor: pointer;
-
     font-weight: bold;
-
 }}
-
 
 .player-name:hover {{
-
     color: #ffffff;
-
 }}
-
 
 .rank-number {{
-
     cursor: pointer;
-
     font-weight: bold;
+}}
 
+.rank-number:hover {{
+    color: #ffffff;
+}}
+
+.is-sleeper {{
+    cursor: pointer;
 }}
 
 
-.rank-number:hover {{
-
+.is-sleeper:hover {{
     color: #ffffff;
-
 }}
 
 
@@ -725,13 +861,9 @@ h2 {{
    ======================================================== */
 
 .sort-arrow {{
-
     font-size: 10px;
-
     margin-left: 6px;
-
     color: #aaaaaa;
-
 }}
 
 
@@ -740,9 +872,7 @@ h2 {{
    ======================================================== */
 
 input[type="checkbox"] {{
-
     accent-color: #4f8cff;
-
 }}
 
 
@@ -751,17 +881,13 @@ input[type="checkbox"] {{
    ======================================================== */
 
 #rankHeader {{
-
     transition:
         color 0.15s ease;
-
 }}
 
 
 </style>
-
 </head>
-
 
 <body>
 
@@ -802,10 +928,7 @@ VORP =
 Player PPG - Replacement Player PPG
 
 <br>
-
-Historical PPG =
-Total PPR over three seasons /
-Total games over three seasons
+Click player rank: drafted by you. <br> Click player name: drafted by someone else. <br>Click position: Sleeper pick 
 
 </p>
 
@@ -821,12 +944,7 @@ Total games over three seasons
 
 <label class="position-check">
 
-<input
-    type="checkbox"
-    class="position-filter"
-    value="QB"
-    checked
->
+<input type="checkbox" class="position-filter" value="QB" checked>
 
 QB
 
@@ -891,6 +1009,16 @@ All
 >
 
 None
+
+</button>
+
+
+<button
+    class="control-button print-button"
+    onclick="hideBaselineColumns()"
+>
+
+Print Table
 
 </button>
 
@@ -1110,6 +1238,75 @@ function clearPositions() {{
 
 
 // ========================================================
+// PRINT TABLE (hide baseline columns)
+// ========================================================
+//
+// Hides the "2025 Baseline PPG" and "3-Year Baseline PPG" columns so
+// the table prints cleaner. Matches on header text rather than a
+// fixed column index, so it keeps working if columns are reordered
+// later. This is a one-way hide -- reload the page to bring the
+// columns back.
+// ========================================================
+
+function hideBaselineColumns() {{
+
+    const table =
+        document.getElementById(
+            "draftTable"
+        );
+
+    const headerCells =
+        Array.from(
+            table.querySelectorAll(
+                "thead th"
+            )
+        );
+
+    const hideIndexes = [];
+
+    headerCells.forEach(
+        function(th, index) {{
+
+            const label =
+                th.textContent.trim();
+
+            if (label.includes("Baseline PPG")) {{
+
+                hideIndexes.push(index);
+                th.style.display = "none";
+
+            }}
+
+        }}
+    );
+
+    const bodyRows =
+        table.querySelectorAll(
+            "tbody tr"
+        );
+
+    bodyRows.forEach(
+        function(row) {{
+
+            hideIndexes.forEach(
+                function(index) {{
+
+                    if (row.children[index]) {{
+
+                        row.children[index].style.display = "none";
+
+                    }}
+
+                }}
+            );
+
+        }}
+    );
+
+}}
+
+
+// ========================================================
 // POSITION CHECKBOX EVENTS
 // ========================================================
 
@@ -1158,7 +1355,9 @@ document
 
             const playerCell =
                 row.children[1];
-
+                
+            const sleeperCell =
+                row.children[2];
 
             rankCell.classList.add(
                 "rank-number"
@@ -1166,6 +1365,10 @@ document
 
             playerCell.classList.add(
                 "player-name"
+            );
+            
+            sleeperCell.classList.add(
+                "is-sleeper"
             );
 
 
@@ -1186,6 +1389,17 @@ document
 
                     row.classList.toggle(
                         "player-drafted"
+                    );
+
+                }}
+            );
+            
+            sleeperCell.addEventListener(
+                "click",
+                function() {{
+
+                    row.classList.toggle(
+                        "sleeper-picked"
                     );
 
                 }}

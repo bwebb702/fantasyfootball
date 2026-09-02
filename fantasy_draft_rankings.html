@@ -182,6 +182,20 @@ h2 {
 }
 
 
+.print-button {
+
+    background-color: #15803d;
+
+}
+
+
+.print-button:hover {
+
+    background-color: #166534;
+
+}
+
+
 /* ========================================================
    TABLE
    ======================================================== */
@@ -319,6 +333,32 @@ h2 {
 
 }
 
+/* ========================================================
+   SLEEPER (click the position)
+   ======================================================== */
+
+#draftTable tbody tr.sleeper-picked {
+
+    background-color: #6E3700 !important;
+
+    color: #D96D00 !important;
+
+}
+
+
+#draftTable tbody tr.sleeper-picked td {
+
+    color: #D96D00 !important;
+
+}
+
+
+#draftTable tbody tr.sleeper-picked:hover {
+
+    background-color: #6E3700 !important;
+
+}
+
 
 /* ========================================================
    DRAFTED TAKES PRIORITY OVER PICKED
@@ -331,6 +371,28 @@ h2 {
    two-class selector has higher specificity than either one alone,
    so it wins regardless of click order or CSS source order.
 */
+
+#draftTable tbody tr.sleeper-picked.rank-picked {
+
+    background-color: #0f3d1f !important;
+
+    color: #8fffa8 !important;
+
+}
+
+
+#draftTable tbody tr.sleeper-picked.rank-picked td {
+
+    color: #8fffa8 !important;
+
+}
+
+
+#draftTable tbody tr.sleeper-picked.rank-picked:hover {
+
+    background-color: #0f3d1f !important;
+
+}
 
 #draftTable tbody tr.rank-picked.player-drafted {
 
@@ -356,40 +418,59 @@ h2 {
 
 }
 
+#draftTable tbody tr.sleeper-picked.player-drafted {
+
+    background-color: #111111 !important;
+
+    color: #666666 !important;
+
+}
+
+
+#draftTable tbody tr.sleeper-picked.player-drafted td {
+
+    color: #666666 !important;
+
+    text-decoration: line-through;
+
+}
+
+
+#draftTable tbody tr.sleeper-picked.player-drafted:hover {
+
+    background-color: #111111 !important;
+}
+
 
 /* ========================================================
    PLAYER NAME
    ======================================================== */
 
 .player-name {
-
     cursor: pointer;
-
     font-weight: bold;
-
 }
-
 
 .player-name:hover {
-
     color: #ffffff;
-
 }
-
 
 .rank-number {
-
     cursor: pointer;
-
     font-weight: bold;
+}
 
+.rank-number:hover {
+    color: #ffffff;
+}
+
+.is-sleeper {
+    cursor: pointer;
 }
 
 
-.rank-number:hover {
-
+.is-sleeper:hover {
     color: #ffffff;
-
 }
 
 
@@ -398,13 +479,9 @@ h2 {
    ======================================================== */
 
 .sort-arrow {
-
     font-size: 10px;
-
     margin-left: 6px;
-
     color: #aaaaaa;
-
 }
 
 
@@ -413,9 +490,7 @@ h2 {
    ======================================================== */
 
 input[type="checkbox"] {
-
     accent-color: #4f8cff;
-
 }
 
 
@@ -424,17 +499,13 @@ input[type="checkbox"] {
    ======================================================== */
 
 #rankHeader {
-
     transition:
         color 0.15s ease;
-
 }
 
 
 </style>
-
 </head>
-
 
 <body>
 
@@ -475,10 +546,7 @@ VORP =
 Player PPG - Replacement Player PPG
 
 <br>
-
-Historical PPG =
-Total PPR over three seasons /
-Total games over three seasons
+Click player rank: drafted by you. <br> Click player name: drafted by someone else. <br>Click position: Sleeper pick 
 
 </p>
 
@@ -494,12 +562,7 @@ Total games over three seasons
 
 <label class="position-check">
 
-<input
-    type="checkbox"
-    class="position-filter"
-    value="QB"
-    checked
->
+<input type="checkbox" class="position-filter" value="QB" checked>
 
 QB
 
@@ -567,6 +630,16 @@ None
 
 </button>
 
+
+<button
+    class="control-button print-button"
+    onclick="hideBaselineColumns()"
+>
+
+Print Table
+
+</button>
+
 </div>
 
 
@@ -579,22 +652,24 @@ None
     <tr style="text-align: left;">
       <th>Rank</th>
       <th>Player</th>
+      <th>Team</th>
       <th>Pos</th>
       <th>ADP</th>
       <th>2025 GP</th>
       <th>2025 PPR</th>
       <th>2025 PPG</th>
-      <th>2025 Replacement PPG</th>
+      <th>2025 Baseline PPG</th>
       <th>2025 VORP</th>
       <th>3-Year GP</th>
       <th>3-Year PPG</th>
-      <th>3-Year Replacement PPG</th>
+      <th>3-Year Baseline PPG</th>
       <th>3-Year VORP</th>
     </tr>
   </thead>
   <tbody><tr data-pos="RB">
       <td>1</td>
       <td>Jahmyr Gibbs</td>
+      <td>DET</td>
       <td>RB1</td>
       <td>1.01</td>
       <td>17.0</td>
@@ -603,12 +678,13 @@ None
       <td>12.13</td>
       <td>9.45</td>
       <td>49.0</td>
-      <td>19.83</td>
+      <td>20.69</td>
       <td>12.38</td>
-      <td>7.45</td>
+      <td>8.31</td>
     </tr><tr data-pos="RB">
       <td>2</td>
       <td>Bijan Robinson</td>
+      <td>ATL</td>
       <td>RB2</td>
       <td>1.02</td>
       <td>17.0</td>
@@ -617,12 +693,13 @@ None
       <td>12.13</td>
       <td>9.68</td>
       <td>51.0</td>
-      <td>18.80</td>
+      <td>20.02</td>
       <td>12.38</td>
-      <td>6.42</td>
+      <td>7.64</td>
     </tr><tr data-pos="WR">
       <td>3</td>
       <td>Ja'Marr Chase</td>
+      <td>CIN</td>
       <td>WR1</td>
       <td>1.03</td>
       <td>16.0</td>
@@ -631,12 +708,13 @@ None
       <td>12.18</td>
       <td>7.43</td>
       <td>49.0</td>
-      <td>19.99</td>
-      <td>13.44</td>
-      <td>6.55</td>
+      <td>20.51</td>
+      <td>12.85</td>
+      <td>7.65</td>
     </tr><tr data-pos="RB">
       <td>4</td>
       <td>Jonathan Taylor</td>
+      <td>IND</td>
       <td>RB3</td>
       <td>1.04</td>
       <td>17.0</td>
@@ -645,12 +723,13 @@ None
       <td>12.13</td>
       <td>9.18</td>
       <td>41.0</td>
-      <td>18.62</td>
+      <td>19.47</td>
       <td>12.38</td>
-      <td>6.24</td>
+      <td>7.09</td>
     </tr><tr data-pos="WR">
       <td>5</td>
       <td>Puka Nacua</td>
+      <td>LAR</td>
       <td>WR2</td>
       <td>1.05</td>
       <td>16.0</td>
@@ -659,12 +738,13 @@ None
       <td>12.18</td>
       <td>11.26</td>
       <td>44.0</td>
-      <td>20.00</td>
-      <td>13.44</td>
-      <td>6.57</td>
+      <td>21.11</td>
+      <td>12.85</td>
+      <td>8.26</td>
     </tr><tr data-pos="RB">
       <td>6</td>
       <td>Christian McCaffrey</td>
+      <td>SF</td>
       <td>RB4</td>
       <td>1.06</td>
       <td>17.0</td>
@@ -673,12 +753,13 @@ None
       <td>12.13</td>
       <td>12.38</td>
       <td>37.0</td>
-      <td>23.13</td>
+      <td>23.16</td>
       <td>12.38</td>
-      <td>10.75</td>
+      <td>10.78</td>
     </tr><tr data-pos="WR">
       <td>7</td>
       <td>Jaxon Smith-Njigba</td>
+      <td>SEA</td>
       <td>WR3</td>
       <td>1.07</td>
       <td>17.0</td>
@@ -687,12 +768,13 @@ None
       <td>12.18</td>
       <td>9.00</td>
       <td>51.0</td>
-      <td>14.95</td>
-      <td>13.44</td>
-      <td>1.52</td>
+      <td>17.01</td>
+      <td>12.85</td>
+      <td>4.16</td>
     </tr><tr data-pos="WR">
       <td>8</td>
       <td>Amon-Ra St. Brown</td>
+      <td>DET</td>
       <td>WR4</td>
       <td>1.08</td>
       <td>17.0</td>
@@ -701,12 +783,13 @@ None
       <td>12.18</td>
       <td>6.88</td>
       <td>50.0</td>
-      <td>19.42</td>
-      <td>13.44</td>
-      <td>5.99</td>
+      <td>19.16</td>
+      <td>12.85</td>
+      <td>6.31</td>
     </tr><tr data-pos="RB">
       <td>9</td>
       <td>James Cook</td>
+      <td>BUF</td>
       <td>RB5</td>
       <td>1.09</td>
       <td>17.0</td>
@@ -715,12 +798,13 @@ None
       <td>12.13</td>
       <td>5.65</td>
       <td>50.0</td>
-      <td>16.03</td>
+      <td>16.73</td>
       <td>12.38</td>
-      <td>3.65</td>
+      <td>4.35</td>
     </tr><tr data-pos="RB">
       <td>10</td>
       <td>Saquon Barkley</td>
+      <td>PHI</td>
       <td>RB6</td>
       <td>1.10</td>
       <td>16.0</td>
@@ -729,12 +813,13 @@ None
       <td>12.13</td>
       <td>2.39</td>
       <td>46.0</td>
-      <td>17.63</td>
+      <td>17.35</td>
       <td>12.38</td>
-      <td>5.25</td>
+      <td>4.97</td>
     </tr><tr data-pos="WR">
       <td>11</td>
       <td>CeeDee Lamb</td>
+      <td>DAL</td>
       <td>WR5</td>
       <td>1.11</td>
       <td>14.0</td>
@@ -743,12 +828,13 @@ None
       <td>12.18</td>
       <td>2.18</td>
       <td>46.0</td>
-      <td>18.86</td>
-      <td>13.44</td>
-      <td>5.42</td>
+      <td>17.22</td>
+      <td>12.85</td>
+      <td>4.37</td>
     </tr><tr data-pos="WR">
       <td>12</td>
       <td>Justin Jefferson</td>
+      <td>MIN</td>
       <td>WR6</td>
       <td>1.12</td>
       <td>17.0</td>
@@ -757,12 +843,13 @@ None
       <td>12.18</td>
       <td>-0.32</td>
       <td>44.0</td>
-      <td>16.39</td>
-      <td>13.44</td>
-      <td>2.95</td>
+      <td>15.18</td>
+      <td>12.85</td>
+      <td>2.33</td>
     </tr><tr data-pos="RB">
       <td>13</td>
       <td>Chase Brown</td>
+      <td>CIN</td>
       <td>RB7</td>
       <td>2.01</td>
       <td>17.0</td>
@@ -771,12 +858,13 @@ None
       <td>12.13</td>
       <td>4.49</td>
       <td>45.0</td>
-      <td>13.14</td>
+      <td>14.86</td>
       <td>12.38</td>
-      <td>0.76</td>
+      <td>2.48</td>
     </tr><tr data-pos="RB">
       <td>14</td>
       <td>De'Von Achane</td>
+      <td>MIA</td>
       <td>RB8</td>
       <td>2.02</td>
       <td>16.0</td>
@@ -785,12 +873,13 @@ None
       <td>12.13</td>
       <td>8.05</td>
       <td>44.0</td>
-      <td>18.49</td>
+      <td>18.91</td>
       <td>12.38</td>
-      <td>6.11</td>
+      <td>6.53</td>
     </tr><tr data-pos="RB">
       <td>15</td>
       <td>Kenneth Walker III</td>
+      <td>KC</td>
       <td>RB9</td>
       <td>2.03</td>
       <td>17.0</td>
@@ -799,12 +888,13 @@ None
       <td>12.13</td>
       <td>-0.84</td>
       <td>43.0</td>
-      <td>13.31</td>
+      <td>12.93</td>
       <td>12.38</td>
-      <td>0.93</td>
+      <td>0.55</td>
     </tr><tr data-pos="RB">
       <td>16</td>
       <td>Derrick Henry</td>
+      <td>BAL</td>
       <td>RB10</td>
       <td>2.04</td>
       <td>17.0</td>
@@ -813,12 +903,13 @@ None
       <td>12.13</td>
       <td>4.31</td>
       <td>51.0</td>
-      <td>16.91</td>
+      <td>17.24</td>
       <td>12.38</td>
-      <td>4.53</td>
+      <td>4.86</td>
     </tr><tr data-pos="RB">
       <td>17</td>
       <td>Omarion Hampton</td>
+      <td>LAC</td>
       <td>RB11</td>
       <td>2.05</td>
       <td>9.0</td>
@@ -833,6 +924,7 @@ None
     </tr><tr data-pos="WR">
       <td>18</td>
       <td>Nico Collins</td>
+      <td>HOU</td>
       <td>WR7</td>
       <td>2.06</td>
       <td>15.0</td>
@@ -841,28 +933,15 @@ None
       <td>12.18</td>
       <td>2.91</td>
       <td>42.0</td>
-      <td>16.60</td>
-      <td>13.44</td>
-      <td>3.16</td>
-    </tr><tr data-pos="WR">
-      <td>19</td>
-      <td>A.J. Brown</td>
-      <td>WR8</td>
-      <td>2.07</td>
-      <td>15.0</td>
-      <td>220.3</td>
-      <td>14.69</td>
-      <td>12.18</td>
-      <td>2.51</td>
-      <td>45.0</td>
-      <td>16.15</td>
-      <td>13.44</td>
-      <td>2.71</td>
+      <td>16.19</td>
+      <td>12.85</td>
+      <td>3.34</td>
     </tr><tr data-pos="RB">
-      <td>20</td>
+      <td>19</td>
       <td>Ashton Jeanty</td>
+      <td>LV</td>
       <td>RB12</td>
-      <td>2.08</td>
+      <td>2.07</td>
       <td>17.0</td>
       <td>245.1</td>
       <td>14.42</td>
@@ -872,79 +951,100 @@ None
       <td>14.42</td>
       <td>12.38</td>
       <td>2.04</td>
-    </tr><tr data-pos="TE">
-      <td>21</td>
-      <td>Brock Bowers</td>
-      <td>TE1</td>
-      <td>2.09</td>
-      <td>12.0</td>
-      <td>176.2</td>
-      <td>14.68</td>
-      <td>10.52</td>
-      <td>4.17</td>
-      <td>29.0</td>
-      <td>15.13</td>
-      <td>10.06</td>
-      <td>5.07</td>
     </tr><tr data-pos="WR">
-      <td>22</td>
+      <td>20</td>
       <td>Drake London</td>
-      <td>WR9</td>
-      <td>2.10</td>
+      <td>ATL</td>
+      <td>WR8</td>
+      <td>2.08</td>
       <td>12.0</td>
       <td>201.9</td>
       <td>16.82</td>
       <td>12.18</td>
       <td>4.65</td>
       <td>45.0</td>
-      <td>14.60</td>
-      <td>13.44</td>
-      <td>1.17</td>
+      <td>15.60</td>
+      <td>12.85</td>
+      <td>2.75</td>
     </tr><tr data-pos="WR">
-      <td>23</td>
-      <td>George Pickens</td>
-      <td>WR10</td>
-      <td>2.11</td>
-      <td>17.0</td>
-      <td>291.9</td>
-      <td>17.17</td>
+      <td>21</td>
+      <td>A.J. Brown</td>
+      <td>NE</td>
+      <td>WR9</td>
+      <td>2.09</td>
+      <td>15.0</td>
+      <td>220.3</td>
+      <td>14.69</td>
       <td>12.18</td>
-      <td>5.00</td>
-      <td>48.0</td>
-      <td>13.86</td>
-      <td>13.44</td>
-      <td>0.42</td>
+      <td>2.51</td>
+      <td>45.0</td>
+      <td>15.73</td>
+      <td>12.85</td>
+      <td>2.88</td>
     </tr><tr data-pos="QB">
-      <td>24</td>
+      <td>22</td>
       <td>Josh Allen</td>
+      <td>BUF</td>
       <td>QB1</td>
-      <td>2.12</td>
+      <td>2.10</td>
       <td>17.0</td>
       <td>364.6</td>
       <td>21.45</td>
       <td>17.42</td>
       <td>4.03</td>
       <td>51.0</td>
-      <td>22.28</td>
-      <td>17.53</td>
-      <td>4.75</td>
+      <td>22.00</td>
+      <td>17.86</td>
+      <td>4.15</td>
+    </tr><tr data-pos="TE">
+      <td>23</td>
+      <td>Brock Bowers</td>
+      <td>LV</td>
+      <td>TE1</td>
+      <td>2.11</td>
+      <td>12.0</td>
+      <td>176.2</td>
+      <td>14.68</td>
+      <td>10.52</td>
+      <td>4.17</td>
+      <td>29.0</td>
+      <td>15.06</td>
+      <td>9.90</td>
+      <td>5.16</td>
     </tr><tr data-pos="RB">
-      <td>25</td>
+      <td>24</td>
       <td>Kyren Williams</td>
+      <td>LAR</td>
       <td>RB13</td>
-      <td>3.01</td>
+      <td>2.12</td>
       <td>17.0</td>
       <td>263.3</td>
       <td>15.49</td>
       <td>12.13</td>
       <td>3.36</td>
       <td>45.0</td>
-      <td>17.56</td>
+      <td>16.73</td>
       <td>12.38</td>
-      <td>5.18</td>
+      <td>4.35</td>
+    </tr><tr data-pos="WR">
+      <td>25</td>
+      <td>George Pickens</td>
+      <td>DAL</td>
+      <td>WR10</td>
+      <td>3.01</td>
+      <td>17.0</td>
+      <td>291.9</td>
+      <td>17.17</td>
+      <td>12.18</td>
+      <td>5.00</td>
+      <td>48.0</td>
+      <td>14.72</td>
+      <td>12.85</td>
+      <td>1.87</td>
     </tr><tr data-pos="WR">
       <td>26</td>
       <td>Malik Nabers</td>
+      <td>NYG</td>
       <td>WR11</td>
       <td>3.02</td>
       <td>4.0</td>
@@ -953,12 +1053,13 @@ None
       <td>12.18</td>
       <td>2.10</td>
       <td>19.0</td>
-      <td>17.41</td>
-      <td>13.44</td>
-      <td>3.97</td>
+      <td>17.11</td>
+      <td>12.85</td>
+      <td>4.26</td>
     </tr><tr data-pos="TE">
       <td>27</td>
       <td>Trey McBride</td>
+      <td>ARI</td>
       <td>TE2</td>
       <td>3.03</td>
       <td>17.0</td>
@@ -967,12 +1068,13 @@ None
       <td>10.52</td>
       <td>8.06</td>
       <td>50.0</td>
-      <td>14.94</td>
-      <td>10.06</td>
-      <td>4.88</td>
+      <td>16.29</td>
+      <td>9.90</td>
+      <td>6.39</td>
     </tr><tr data-pos="WR">
       <td>28</td>
       <td>Chris Olave</td>
+      <td>NO</td>
       <td>WR12</td>
       <td>3.04</td>
       <td>16.0</td>
@@ -981,14 +1083,30 @@ None
       <td>12.18</td>
       <td>4.58</td>
       <td>40.0</td>
-      <td>14.40</td>
-      <td>13.44</td>
-      <td>0.96</td>
-    </tr><tr data-pos="RB" style="color: firebrick;">
+      <td>14.86</td>
+      <td>12.85</td>
+      <td>2.01</td>
+    </tr><tr data-pos="RB">
       <td>29</td>
-      <td>Jeremiyah Love</td>
+      <td>Javonte Williams</td>
+      <td>DAL</td>
       <td>RB14</td>
       <td>3.05</td>
+      <td>16.0</td>
+      <td>242.8</td>
+      <td>15.18</td>
+      <td>12.13</td>
+      <td>3.05</td>
+      <td>49.0</td>
+      <td>12.48</td>
+      <td>12.38</td>
+      <td>0.10</td>
+    </tr><tr data-pos="RB" style="color: firebrick;">
+      <td>30</td>
+      <td>Jeremiyah Love</td>
+      <td>ARI</td>
+      <td>RB15</td>
+      <td>3.06</td>
       <td></td>
       <td></td>
       <td></td>
@@ -999,36 +1117,24 @@ None
       <td></td>
       <td></td>
     </tr><tr data-pos="WR">
-      <td>30</td>
+      <td>31</td>
       <td>DeVonta Smith</td>
+      <td>PHI</td>
       <td>WR13</td>
-      <td>3.06</td>
+      <td>3.07</td>
       <td>17.0</td>
       <td>201.8</td>
       <td>11.87</td>
       <td>12.18</td>
       <td>-0.30</td>
       <td>46.0</td>
-      <td>13.67</td>
-      <td>13.44</td>
-      <td>0.23</td>
-    </tr><tr data-pos="RB">
-      <td>31</td>
-      <td>Javonte Williams</td>
-      <td>RB15</td>
-      <td>3.07</td>
-      <td>16.0</td>
-      <td>242.8</td>
-      <td>15.18</td>
-      <td>12.13</td>
-      <td>3.05</td>
-      <td>49.0</td>
-      <td>11.83</td>
-      <td>12.38</td>
-      <td>-0.55</td>
+      <td>13.25</td>
+      <td>12.85</td>
+      <td>0.39</td>
     </tr><tr data-pos="RB">
       <td>32</td>
       <td>Breece Hall</td>
+      <td>NYJ</td>
       <td>RB16</td>
       <td>3.08</td>
       <td>16.0</td>
@@ -1037,12 +1143,13 @@ None
       <td>12.13</td>
       <td>0.85</td>
       <td>49.0</td>
-      <td>15.08</td>
+      <td>14.39</td>
       <td>12.38</td>
-      <td>2.70</td>
+      <td>2.01</td>
     </tr><tr data-pos="WR">
       <td>33</td>
       <td>Tee Higgins</td>
+      <td>CIN</td>
       <td>WR14</td>
       <td>3.09</td>
       <td>15.0</td>
@@ -1051,40 +1158,43 @@ None
       <td>12.18</td>
       <td>1.93</td>
       <td>39.0</td>
-      <td>14.65</td>
-      <td>13.44</td>
-      <td>1.21</td>
+      <td>15.02</td>
+      <td>12.85</td>
+      <td>2.17</td>
     </tr><tr data-pos="WR">
       <td>34</td>
-      <td>Rashee Rice</td>
+      <td>Zay Flowers</td>
+      <td>BAL</td>
       <td>WR15</td>
       <td>3.10</td>
-      <td>8.0</td>
-      <td>150.1</td>
-      <td>18.76</td>
-      <td>12.18</td>
-      <td>6.59</td>
-      <td>28.0</td>
-      <td>15.27</td>
-      <td>13.44</td>
-      <td>1.83</td>
-    </tr><tr data-pos="WR">
-      <td>35</td>
-      <td>Zay Flowers</td>
-      <td>WR16</td>
-      <td>3.11</td>
       <td>17.0</td>
       <td>243.3</td>
       <td>14.31</td>
       <td>12.18</td>
       <td>2.14</td>
       <td>50.0</td>
-      <td>13.18</td>
-      <td>13.44</td>
-      <td>-0.25</td>
+      <td>13.42</td>
+      <td>12.85</td>
+      <td>0.57</td>
+    </tr><tr data-pos="WR">
+      <td>35</td>
+      <td>Rashee Rice</td>
+      <td>KC</td>
+      <td>WR16</td>
+      <td>3.11</td>
+      <td>8.0</td>
+      <td>150.1</td>
+      <td>18.76</td>
+      <td>12.18</td>
+      <td>6.59</td>
+      <td>28.0</td>
+      <td>16.51</td>
+      <td>12.85</td>
+      <td>3.66</td>
     </tr><tr data-pos="RB">
       <td>36</td>
       <td>Travis Etienne</td>
+      <td>NO</td>
       <td>RB17</td>
       <td>3.12</td>
       <td>17.0</td>
@@ -1093,42 +1203,15 @@ None
       <td>12.13</td>
       <td>2.81</td>
       <td>49.0</td>
-      <td>13.60</td>
+      <td>13.31</td>
       <td>12.38</td>
-      <td>1.22</td>
-    </tr><tr data-pos="WR">
-      <td>37</td>
-      <td>Jaylen Waddle</td>
-      <td>WR17</td>
-      <td>4.01</td>
-      <td>16.0</td>
-      <td>194.1</td>
-      <td>12.13</td>
-      <td>12.18</td>
-      <td>-0.04</td>
-      <td>45.0</td>
-      <td>12.05</td>
-      <td>13.44</td>
-      <td>-1.39</td>
-    </tr><tr data-pos="QB">
-      <td>38</td>
-      <td>Lamar Jackson</td>
-      <td>QB2</td>
-      <td>4.02</td>
-      <td>13.0</td>
-      <td>214.9</td>
-      <td>16.53</td>
-      <td>17.42</td>
-      <td>-0.88</td>
-      <td>46.0</td>
-      <td>21.23</td>
-      <td>17.53</td>
-      <td>3.70</td>
+      <td>0.93</td>
     </tr><tr data-pos="TE">
-      <td>39</td>
+      <td>37</td>
       <td>Colston Loveland</td>
+      <td>CHI</td>
       <td>TE3</td>
-      <td>4.03</td>
+      <td>4.01</td>
       <td>16.0</td>
       <td>165.1</td>
       <td>10.32</td>
@@ -1136,11 +1219,42 @@ None
       <td>-0.20</td>
       <td>16.0</td>
       <td>10.32</td>
-      <td>10.06</td>
-      <td>0.26</td>
+      <td>9.90</td>
+      <td>0.42</td>
+    </tr><tr data-pos="WR">
+      <td>38</td>
+      <td>Jaylen Waddle</td>
+      <td>DEN</td>
+      <td>WR17</td>
+      <td>4.02</td>
+      <td>16.0</td>
+      <td>194.1</td>
+      <td>12.13</td>
+      <td>12.18</td>
+      <td>-0.04</td>
+      <td>45.0</td>
+      <td>11.74</td>
+      <td>12.85</td>
+      <td>-1.11</td>
+    </tr><tr data-pos="QB">
+      <td>39</td>
+      <td>Lamar Jackson</td>
+      <td>BAL</td>
+      <td>QB2</td>
+      <td>4.03</td>
+      <td>13.0</td>
+      <td>214.9</td>
+      <td>16.53</td>
+      <td>17.42</td>
+      <td>-0.88</td>
+      <td>46.0</td>
+      <td>20.64</td>
+      <td>17.86</td>
+      <td>2.78</td>
     </tr><tr data-pos="RB">
       <td>40</td>
       <td>D'Andre Swift</td>
+      <td>CHI</td>
       <td>RB18</td>
       <td>4.04</td>
       <td>16.0</td>
@@ -1149,28 +1263,60 @@ None
       <td>12.13</td>
       <td>2.16</td>
       <td>49.0</td>
-      <td>13.11</td>
+      <td>13.41</td>
       <td>12.38</td>
-      <td>0.73</td>
+      <td>1.03</td>
     </tr><tr data-pos="WR">
       <td>41</td>
-      <td>Ladd McConkey</td>
+      <td>Tetairoa McMillan</td>
+      <td>CAR</td>
       <td>WR18</td>
       <td>4.05</td>
+      <td>17.0</td>
+      <td>211.4</td>
+      <td>12.44</td>
+      <td>12.18</td>
+      <td>0.26</td>
+      <td>17.0</td>
+      <td>12.44</td>
+      <td>12.85</td>
+      <td>-0.42</td>
+    </tr><tr data-pos="WR">
+      <td>42</td>
+      <td>Ladd McConkey</td>
+      <td>LAC</td>
+      <td>WR19</td>
+      <td>4.06</td>
       <td>16.0</td>
       <td>180.9</td>
       <td>11.31</td>
       <td>12.18</td>
       <td>-0.87</td>
       <td>32.0</td>
-      <td>13.18</td>
-      <td>13.44</td>
-      <td>-0.26</td>
+      <td>12.81</td>
+      <td>12.85</td>
+      <td>-0.04</td>
+    </tr><tr data-pos="WR">
+      <td>43</td>
+      <td>Garrett Wilson</td>
+      <td>NYJ</td>
+      <td>WR20</td>
+      <td>4.07</td>
+      <td>7.0</td>
+      <td>99.5</td>
+      <td>14.21</td>
+      <td>12.18</td>
+      <td>2.04</td>
+      <td>41.0</td>
+      <td>14.10</td>
+      <td>12.85</td>
+      <td>1.25</td>
     </tr><tr data-pos="RB">
-      <td>42</td>
+      <td>44</td>
       <td>Cam Skattebo</td>
+      <td>NYG</td>
       <td>RB19</td>
-      <td>4.06</td>
+      <td>4.08</td>
       <td>8.0</td>
       <td>127.7</td>
       <td>15.96</td>
@@ -1181,36 +1327,9 @@ None
       <td>12.38</td>
       <td>3.58</td>
     </tr><tr data-pos="WR">
-      <td>43</td>
-      <td>Tetairoa McMillan</td>
-      <td>WR19</td>
-      <td>4.07</td>
-      <td>17.0</td>
-      <td>211.4</td>
-      <td>12.44</td>
-      <td>12.18</td>
-      <td>0.26</td>
-      <td>17.0</td>
-      <td>12.44</td>
-      <td>13.44</td>
-      <td>-1.00</td>
-    </tr><tr data-pos="WR">
-      <td>44</td>
-      <td>Garrett Wilson</td>
-      <td>WR20</td>
-      <td>4.08</td>
-      <td>7.0</td>
-      <td>99.5</td>
-      <td>14.21</td>
-      <td>12.18</td>
-      <td>2.04</td>
-      <td>41.0</td>
-      <td>13.77</td>
-      <td>13.44</td>
-      <td>0.33</td>
-    </tr><tr data-pos="WR">
       <td>45</td>
       <td>Emeka Egbuka</td>
+      <td>TB</td>
       <td>WR21</td>
       <td>4.09</td>
       <td>17.0</td>
@@ -1220,11 +1339,12 @@ None
       <td>-0.66</td>
       <td>17.0</td>
       <td>11.51</td>
-      <td>13.44</td>
-      <td>-1.92</td>
+      <td>12.85</td>
+      <td>-1.34</td>
     </tr><tr data-pos="RB">
       <td>46</td>
       <td>Bucky Irving</td>
+      <td>TB</td>
       <td>RB20</td>
       <td>4.10</td>
       <td>10.0</td>
@@ -1233,12 +1353,13 @@ None
       <td>12.13</td>
       <td>1.72</td>
       <td>27.0</td>
-      <td>14.18</td>
+      <td>14.13</td>
       <td>12.38</td>
-      <td>1.80</td>
+      <td>1.75</td>
     </tr><tr data-pos="RB">
       <td>47</td>
       <td>David Montgomery</td>
+      <td>HOU</td>
       <td>RB21</td>
       <td>4.11</td>
       <td>17.0</td>
@@ -1247,12 +1368,13 @@ None
       <td>12.13</td>
       <td>-2.31</td>
       <td>45.0</td>
-      <td>13.24</td>
       <td>12.38</td>
-      <td>0.86</td>
+      <td>12.38</td>
+      <td>0.00</td>
     </tr><tr data-pos="TE">
       <td>48</td>
       <td>Tyler Warren</td>
+      <td>IND</td>
       <td>TE4</td>
       <td>4.12</td>
       <td>17.0</td>
@@ -1262,11 +1384,12 @@ None
       <td>0.57</td>
       <td>17.0</td>
       <td>11.09</td>
-      <td>10.06</td>
-      <td>1.03</td>
+      <td>9.90</td>
+      <td>1.19</td>
     </tr><tr data-pos="QB">
       <td>49</td>
       <td>Drake Maye</td>
+      <td>NE</td>
       <td>QB3</td>
       <td>5.01</td>
       <td>17.0</td>
@@ -1275,42 +1398,60 @@ None
       <td>17.42</td>
       <td>3.29</td>
       <td>30.0</td>
-      <td>17.64</td>
-      <td>17.53</td>
-      <td>0.10</td>
+      <td>18.31</td>
+      <td>17.86</td>
+      <td>0.46</td>
     </tr><tr data-pos="WR">
       <td>50</td>
-      <td>D.J. Moore</td>
+      <td>Terry McLaurin</td>
+      <td>WAS</td>
       <td>WR22</td>
       <td>5.02</td>
-      <td>17.0</td>
-      <td>170.2</td>
-      <td>10.01</td>
-      <td>12.18</td>
-      <td>-2.16</td>
-      <td>51.0</td>
-      <td>13.62</td>
-      <td>13.44</td>
-      <td>0.19</td>
-    </tr><tr data-pos="WR">
-      <td>51</td>
-      <td>Terry McLaurin</td>
-      <td>WR23</td>
-      <td>5.03</td>
       <td>10.0</td>
       <td>114.2</td>
       <td>11.42</td>
       <td>12.18</td>
       <td>-0.75</td>
       <td>44.0</td>
-      <td>13.44</td>
-      <td>13.44</td>
-      <td>0.00</td>
-    </tr><tr data-pos="RB">
+      <td>13.42</td>
+      <td>12.85</td>
+      <td>0.57</td>
+    </tr><tr data-pos="WR">
+      <td>51</td>
+      <td>D.J. Moore</td>
+      <td>BUF</td>
+      <td>WR23</td>
+      <td>5.03</td>
+      <td>17.0</td>
+      <td>170.2</td>
+      <td>10.01</td>
+      <td>12.18</td>
+      <td>-2.16</td>
+      <td>51.0</td>
+      <td>12.48</td>
+      <td>12.85</td>
+      <td>-0.37</td>
+    </tr><tr data-pos="RB" style="color: firebrick;">
       <td>52</td>
-      <td>Quinshon Judkins</td>
+      <td>Jadarian Price</td>
+      <td>SEA</td>
       <td>RB22</td>
       <td>5.04</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr><tr data-pos="RB">
+      <td>53</td>
+      <td>Quinshon Judkins</td>
+      <td>CLE</td>
+      <td>RB23</td>
+      <td>5.05</td>
       <td>14.0</td>
       <td>169.8</td>
       <td>12.13</td>
@@ -1320,39 +1461,42 @@ None
       <td>12.13</td>
       <td>12.38</td>
       <td>-0.25</td>
+    </tr><tr data-pos="WR">
+      <td>54</td>
+      <td>Luther Burden</td>
+      <td>CHI</td>
+      <td>WR24</td>
+      <td>5.06</td>
+      <td>15.0</td>
+      <td>127.9</td>
+      <td>8.53</td>
+      <td>12.18</td>
+      <td>-3.65</td>
+      <td>15.0</td>
+      <td>8.53</td>
+      <td>12.85</td>
+      <td>-4.32</td>
     </tr><tr data-pos="QB">
-      <td>53</td>
+      <td>55</td>
       <td>Joe Burrow</td>
+      <td>CIN</td>
       <td>QB4</td>
-      <td>5.05</td>
+      <td>5.07</td>
       <td>8.0</td>
       <td>134.5</td>
       <td>16.81</td>
       <td>17.42</td>
       <td>-0.60</td>
       <td>35.0</td>
-      <td>18.70</td>
-      <td>17.53</td>
-      <td>1.17</td>
-    </tr><tr data-pos="RB" style="color: firebrick;">
-      <td>54</td>
-      <td>Jadarian Price</td>
-      <td>RB23</td>
-      <td>5.06</td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
+      <td>19.06</td>
+      <td>17.86</td>
+      <td>1.21</td>
     </tr><tr data-pos="RB">
-      <td>55</td>
+      <td>56</td>
       <td>Bhayshul Tuten</td>
+      <td>JAC</td>
       <td>RB24</td>
-      <td>5.07</td>
+      <td>5.08</td>
       <td>15.0</td>
       <td>88.6</td>
       <td>5.91</td>
@@ -1363,22 +1507,9 @@ None
       <td>12.38</td>
       <td>-6.47</td>
     </tr><tr data-pos="WR">
-      <td>56</td>
-      <td>Luther Burden</td>
-      <td>WR24</td>
-      <td>5.08</td>
-      <td>15.0</td>
-      <td>127.9</td>
-      <td>8.53</td>
-      <td>12.18</td>
-      <td>-3.65</td>
-      <td>15.0</td>
-      <td>8.53</td>
-      <td>13.44</td>
-      <td>-4.91</td>
-    </tr><tr data-pos="WR">
       <td>57</td>
       <td>Davante Adams</td>
+      <td>LAR</td>
       <td>WR25</td>
       <td>5.09</td>
       <td>14.0</td>
@@ -1387,27 +1518,29 @@ None
       <td>12.18</td>
       <td>3.75</td>
       <td>45.0</td>
-      <td>16.21</td>
-      <td>13.44</td>
-      <td>2.78</td>
-    </tr><tr data-pos="QB">
+      <td>16.28</td>
+      <td>12.85</td>
+      <td>3.43</td>
+    </tr><tr data-pos="WR">
       <td>58</td>
-      <td>Jalen Hurts</td>
-      <td>QB5</td>
+      <td>Jameson Williams</td>
+      <td>DET</td>
+      <td>WR26</td>
       <td>5.10</td>
-      <td>16.0</td>
-      <td>299.1</td>
-      <td>18.69</td>
-      <td>17.42</td>
-      <td>1.28</td>
-      <td>48.0</td>
-      <td>20.23</td>
-      <td>17.53</td>
-      <td>2.70</td>
+      <td>17.0</td>
+      <td>219.9</td>
+      <td>12.94</td>
+      <td>12.18</td>
+      <td>0.76</td>
+      <td>44.0</td>
+      <td>12.52</td>
+      <td>12.85</td>
+      <td>-0.33</td>
     </tr><tr data-pos="WR">
       <td>59</td>
       <td>Rome Odunze</td>
-      <td>WR26</td>
+      <td>CHI</td>
+      <td>WR27</td>
       <td>5.11</td>
       <td>12.0</td>
       <td>146.1</td>
@@ -1415,68 +1548,73 @@ None
       <td>12.18</td>
       <td>0.00</td>
       <td>29.0</td>
-      <td>10.03</td>
-      <td>13.44</td>
-      <td>-3.40</td>
-    </tr><tr data-pos="WR">
-      <td>60</td>
-      <td>Jameson Williams</td>
-      <td>WR27</td>
-      <td>5.12</td>
-      <td>17.0</td>
-      <td>219.9</td>
-      <td>12.94</td>
-      <td>12.18</td>
-      <td>0.76</td>
-      <td>44.0</td>
-      <td>11.65</td>
-      <td>13.44</td>
-      <td>-1.79</td>
+      <td>10.40</td>
+      <td>12.85</td>
+      <td>-2.45</td>
     </tr><tr data-pos="TE">
-      <td>61</td>
+      <td>60</td>
       <td>Tucker Kraft</td>
+      <td>GB</td>
       <td>TE5</td>
-      <td>6.01</td>
+      <td>5.12</td>
       <td>8.0</td>
       <td>117.2</td>
       <td>14.65</td>
       <td>10.52</td>
       <td>4.13</td>
       <td>42.0</td>
-      <td>8.55</td>
-      <td>10.06</td>
-      <td>-1.51</td>
-    </tr><tr data-pos="WR">
-      <td>62</td>
-      <td>Christian Watson</td>
-      <td>WR28</td>
-      <td>6.02</td>
-      <td>10.0</td>
-      <td>132.4</td>
-      <td>13.24</td>
-      <td>12.18</td>
-      <td>1.07</td>
-      <td>34.0</td>
-      <td>9.97</td>
-      <td>13.44</td>
-      <td>-3.47</td>
+      <td>10.09</td>
+      <td>9.90</td>
+      <td>0.19</td>
     </tr><tr data-pos="QB">
-      <td>63</td>
+      <td>61</td>
+      <td>Jalen Hurts</td>
+      <td>PHI</td>
+      <td>QB5</td>
+      <td>6.01</td>
+      <td>16.0</td>
+      <td>299.1</td>
+      <td>18.69</td>
+      <td>17.42</td>
+      <td>1.28</td>
+      <td>48.0</td>
+      <td>19.83</td>
+      <td>17.86</td>
+      <td>1.98</td>
+    </tr><tr data-pos="QB">
+      <td>62</td>
       <td>Jayden Daniels</td>
+      <td>WAS</td>
       <td>QB6</td>
-      <td>6.03</td>
+      <td>6.02</td>
       <td>7.0</td>
       <td>114.3</td>
       <td>16.33</td>
       <td>17.42</td>
       <td>-1.09</td>
       <td>24.0</td>
-      <td>19.59</td>
-      <td>17.53</td>
-      <td>2.05</td>
+      <td>19.17</td>
+      <td>17.86</td>
+      <td>1.32</td>
+    </tr><tr data-pos="WR">
+      <td>63</td>
+      <td>Christian Watson</td>
+      <td>GB</td>
+      <td>WR28</td>
+      <td>6.03</td>
+      <td>10.0</td>
+      <td>132.4</td>
+      <td>13.24</td>
+      <td>12.18</td>
+      <td>1.07</td>
+      <td>34.0</td>
+      <td>10.28</td>
+      <td>12.85</td>
+      <td>-2.57</td>
     </tr><tr data-pos="RB">
       <td>64</td>
       <td>TreVeyon Henderson</td>
+      <td>NE</td>
       <td>RB25</td>
       <td>6.04</td>
       <td>17.0</td>
@@ -1488,65 +1626,70 @@ None
       <td>12.13</td>
       <td>12.38</td>
       <td>-0.25</td>
-    </tr><tr data-pos="TE">
+    </tr><tr data-pos="RB">
       <td>65</td>
-      <td>Sam LaPorta</td>
-      <td>TE6</td>
-      <td>6.05</td>
-      <td>9.0</td>
-      <td>106.9</td>
-      <td>11.88</td>
-      <td>10.52</td>
-      <td>1.36</td>
-      <td>42.0</td>
-      <td>12.40</td>
-      <td>10.06</td>
-      <td>2.34</td>
-    </tr><tr data-pos="WR">
-      <td>66</td>
-      <td>Parker Washington</td>
-      <td>WR29</td>
-      <td>6.06</td>
-      <td>16.0</td>
-      <td>184.7</td>
-      <td>11.54</td>
-      <td>12.18</td>
-      <td>-0.63</td>
-      <td>42.0</td>
-      <td>7.64</td>
-      <td>13.44</td>
-      <td>-5.80</td>
-    </tr><tr data-pos="RB">
-      <td>67</td>
-      <td>Jaylen Warren</td>
-      <td>RB26</td>
-      <td>6.07</td>
-      <td>16.0</td>
-      <td>217.1</td>
-      <td>13.57</td>
-      <td>12.13</td>
-      <td>1.44</td>
-      <td>48.0</td>
-      <td>11.20</td>
-      <td>12.38</td>
-      <td>-1.18</td>
-    </tr><tr data-pos="RB">
-      <td>68</td>
       <td>Rhamondre Stevenson</td>
-      <td>RB27</td>
-      <td>6.08</td>
+      <td>NE</td>
+      <td>RB26</td>
+      <td>6.05</td>
       <td>14.0</td>
       <td>178.8</td>
       <td>12.77</td>
       <td>12.13</td>
       <td>0.64</td>
       <td>41.0</td>
-      <td>12.20</td>
+      <td>12.31</td>
       <td>12.38</td>
-      <td>-0.18</td>
+      <td>-0.07</td>
+    </tr><tr data-pos="TE">
+      <td>66</td>
+      <td>Sam LaPorta</td>
+      <td>DET</td>
+      <td>TE6</td>
+      <td>6.06</td>
+      <td>9.0</td>
+      <td>106.9</td>
+      <td>11.88</td>
+      <td>10.52</td>
+      <td>1.36</td>
+      <td>42.0</td>
+      <td>11.96</td>
+      <td>9.90</td>
+      <td>2.07</td>
+    </tr><tr data-pos="WR">
+      <td>67</td>
+      <td>Parker Washington</td>
+      <td>JAC</td>
+      <td>WR29</td>
+      <td>6.07</td>
+      <td>16.0</td>
+      <td>184.7</td>
+      <td>11.54</td>
+      <td>12.18</td>
+      <td>-0.63</td>
+      <td>42.0</td>
+      <td>8.65</td>
+      <td>12.85</td>
+      <td>-4.20</td>
+    </tr><tr data-pos="RB">
+      <td>68</td>
+      <td>Jaylen Warren</td>
+      <td>PIT</td>
+      <td>RB27</td>
+      <td>6.08</td>
+      <td>16.0</td>
+      <td>217.1</td>
+      <td>13.57</td>
+      <td>12.13</td>
+      <td>1.44</td>
+      <td>48.0</td>
+      <td>11.54</td>
+      <td>12.38</td>
+      <td>-0.84</td>
     </tr><tr data-pos="WR">
       <td>69</td>
       <td>Mike Evans</td>
+      <td>SF</td>
       <td>WR30</td>
       <td>6.09</td>
       <td>8.0</td>
@@ -1555,12 +1698,13 @@ None
       <td>12.18</td>
       <td>-1.57</td>
       <td>39.0</td>
-      <td>15.58</td>
-      <td>13.44</td>
-      <td>2.15</td>
+      <td>14.75</td>
+      <td>12.85</td>
+      <td>1.90</td>
     </tr><tr data-pos="QB">
       <td>70</td>
       <td>Caleb Williams</td>
+      <td>CHI</td>
       <td>QB7</td>
       <td>6.10</td>
       <td>17.0</td>
@@ -1569,14 +1713,30 @@ None
       <td>17.42</td>
       <td>1.33</td>
       <td>34.0</td>
-      <td>16.86</td>
-      <td>17.53</td>
-      <td>-0.67</td>
-    </tr><tr data-pos="TE">
+      <td>17.24</td>
+      <td>17.86</td>
+      <td>-0.62</td>
+    </tr><tr data-pos="WR">
       <td>71</td>
-      <td>Harold Fannin</td>
-      <td>TE7</td>
+      <td>Marvin Harrison Jr.</td>
+      <td>ARI</td>
+      <td>WR31</td>
       <td>6.11</td>
+      <td>12.0</td>
+      <td>127.8</td>
+      <td>10.65</td>
+      <td>12.18</td>
+      <td>-1.52</td>
+      <td>29.0</td>
+      <td>11.09</td>
+      <td>12.85</td>
+      <td>-1.76</td>
+    </tr><tr data-pos="TE">
+      <td>72</td>
+      <td>Harold Fannin</td>
+      <td>CLE</td>
+      <td>TE7</td>
+      <td>6.12</td>
       <td>16.0</td>
       <td>186.4</td>
       <td>11.65</td>
@@ -1584,97 +1744,14 @@ None
       <td>1.13</td>
       <td>16.0</td>
       <td>11.65</td>
-      <td>10.06</td>
-      <td>1.59</td>
-    </tr><tr data-pos="TE">
-      <td>72</td>
-      <td>Kyle Pitts</td>
-      <td>TE8</td>
-      <td>6.12</td>
-      <td>17.0</td>
-      <td>210.8</td>
-      <td>12.40</td>
-      <td>10.52</td>
-      <td>1.88</td>
-      <td>51.0</td>
-      <td>9.40</td>
-      <td>10.06</td>
-      <td>-0.66</td>
-    </tr><tr data-pos="WR">
+      <td>9.90</td>
+      <td>1.75</td>
+    </tr><tr data-pos="QB">
       <td>73</td>
-      <td>Marvin Harrison Jr.</td>
-      <td>WR31</td>
-      <td>7.01</td>
-      <td>12.0</td>
-      <td>127.8</td>
-      <td>10.65</td>
-      <td>12.18</td>
-      <td>-1.52</td>
-      <td>29.0</td>
-      <td>11.18</td>
-      <td>13.44</td>
-      <td>-2.25</td>
-    </tr><tr data-pos="WR" style="color: firebrick;">
-      <td>74</td>
-      <td>Carnell Tate</td>
-      <td>WR32</td>
-      <td>7.02</td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-    </tr><tr data-pos="RB">
-      <td>75</td>
-      <td>Josh Jacobs</td>
-      <td>RB28</td>
-      <td>7.03</td>
-      <td>15.0</td>
-      <td>237.1</td>
-      <td>15.81</td>
-      <td>12.13</td>
-      <td>3.68</td>
-      <td>45.0</td>
-      <td>15.81</td>
-      <td>12.38</td>
-      <td>3.43</td>
-    </tr><tr data-pos="QB">
-      <td>76</td>
-      <td>Dak Prescott</td>
-      <td>QB8</td>
-      <td>7.05</td>
-      <td>17.0</td>
-      <td>313.8</td>
-      <td>18.46</td>
-      <td>17.42</td>
-      <td>1.04</td>
-      <td>42.0</td>
-      <td>18.41</td>
-      <td>17.53</td>
-      <td>0.87</td>
-    </tr><tr data-pos="RB">
-      <td>77</td>
-      <td>Tony Pollard</td>
-      <td>RB30</td>
-      <td>7.06</td>
-      <td>17.0</td>
-      <td>185.8</td>
-      <td>10.93</td>
-      <td>12.13</td>
-      <td>-1.20</td>
-      <td>50.0</td>
-      <td>12.18</td>
-      <td>12.38</td>
-      <td>-0.20</td>
-    </tr><tr data-pos="QB">
-      <td>78</td>
       <td>Justin Herbert</td>
-      <td>QB9</td>
-      <td>7.07</td>
+      <td>LAC</td>
+      <td>QB8</td>
+      <td>7.01</td>
       <td>16.0</td>
       <td>286.9</td>
       <td>17.93</td>
@@ -1682,40 +1759,118 @@ None
       <td>0.52</td>
       <td>46.0</td>
       <td>17.53</td>
-      <td>17.53</td>
-      <td>0.00</td>
-    </tr><tr data-pos="RB">
-      <td>79</td>
-      <td>Rico Dowdle</td>
-      <td>RB31</td>
-      <td>7.08</td>
+      <td>17.86</td>
+      <td>-0.32</td>
+    </tr><tr data-pos="QB">
+      <td>74</td>
+      <td>Dak Prescott</td>
+      <td>DAL</td>
+      <td>QB9</td>
+      <td>7.02</td>
       <td>17.0</td>
-      <td>216.3</td>
-      <td>12.72</td>
-      <td>12.13</td>
-      <td>0.59</td>
-      <td>49.0</td>
-      <td>10.32</td>
-      <td>12.38</td>
-      <td>-2.06</td>
+      <td>313.8</td>
+      <td>18.46</td>
+      <td>17.42</td>
+      <td>1.04</td>
+      <td>42.0</td>
+      <td>18.06</td>
+      <td>17.86</td>
+      <td>0.21</td>
     </tr><tr data-pos="TE">
-      <td>80</td>
+      <td>75</td>
+      <td>Kyle Pitts</td>
+      <td>ATL</td>
+      <td>TE8</td>
+      <td>7.03</td>
+      <td>17.0</td>
+      <td>210.8</td>
+      <td>12.40</td>
+      <td>10.52</td>
+      <td>1.88</td>
+      <td>51.0</td>
+      <td>10.12</td>
+      <td>9.90</td>
+      <td>0.22</td>
+    </tr><tr data-pos="RB">
+      <td>76</td>
+      <td>Tony Pollard</td>
+      <td>TEN</td>
+      <td>RB28</td>
+      <td>7.04</td>
+      <td>17.0</td>
+      <td>185.8</td>
+      <td>10.93</td>
+      <td>12.13</td>
+      <td>-1.20</td>
+      <td>50.0</td>
+      <td>11.81</td>
+      <td>12.38</td>
+      <td>-0.57</td>
+    </tr><tr data-pos="TE">
+      <td>77</td>
       <td>George Kittle</td>
+      <td>SF</td>
       <td>TE9</td>
-      <td>7.09</td>
+      <td>7.05</td>
       <td>11.0</td>
       <td>161.5</td>
       <td>14.68</td>
       <td>10.52</td>
       <td>4.16</td>
       <td>42.0</td>
-      <td>14.32</td>
-      <td>10.06</td>
-      <td>4.25</td>
+      <td>14.69</td>
+      <td>9.90</td>
+      <td>4.80</td>
+    </tr><tr data-pos="RB">
+      <td>78</td>
+      <td>Rico Dowdle</td>
+      <td>PIT</td>
+      <td>RB30</td>
+      <td>7.07</td>
+      <td>17.0</td>
+      <td>216.3</td>
+      <td>12.72</td>
+      <td>12.13</td>
+      <td>0.59</td>
+      <td>49.0</td>
+      <td>11.47</td>
+      <td>12.38</td>
+      <td>-0.90</td>
+    </tr><tr data-pos="WR" style="color: firebrick;">
+      <td>79</td>
+      <td>Carnell Tate</td>
+      <td>TEN</td>
+      <td>WR32</td>
+      <td>7.08</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr><tr data-pos="WR">
+      <td>80</td>
+      <td>Brian Thomas</td>
+      <td>JAC</td>
+      <td>WR33</td>
+      <td>7.09</td>
+      <td>14.0</td>
+      <td>138.8</td>
+      <td>9.91</td>
+      <td>12.18</td>
+      <td>-2.26</td>
+      <td>31.0</td>
+      <td>12.95</td>
+      <td>12.85</td>
+      <td>0.10</td>
     </tr><tr data-pos="WR">
       <td>81</td>
       <td>D.K. Metcalf</td>
-      <td>WR33</td>
+      <td>PIT</td>
+      <td>WR34</td>
       <td>7.10</td>
       <td>15.0</td>
       <td>187.2</td>
@@ -1723,83 +1878,74 @@ None
       <td>12.18</td>
       <td>0.30</td>
       <td>46.0</td>
-      <td>13.13</td>
-      <td>13.44</td>
-      <td>-0.31</td>
-    </tr><tr data-pos="WR">
-      <td>82</td>
-      <td>Brian Thomas</td>
-      <td>WR34</td>
-      <td>7.11</td>
-      <td>14.0</td>
-      <td>138.8</td>
-      <td>9.91</td>
-      <td>12.18</td>
-      <td>-2.26</td>
-      <td>31.0</td>
-      <td>13.64</td>
-      <td>13.44</td>
-      <td>0.20</td>
-    </tr><tr data-pos="RB">
-      <td>83</td>
-      <td>J.K. Dobbins</td>
-      <td>RB32</td>
-      <td>7.12</td>
-      <td>10.0</td>
-      <td>115.9</td>
-      <td>11.59</td>
-      <td>12.13</td>
-      <td>-0.54</td>
-      <td>24.0</td>
-      <td>13.31</td>
-      <td>12.38</td>
-      <td>0.93</td>
-    </tr><tr data-pos="WR">
-      <td>84</td>
-      <td>Chris Godwin</td>
-      <td>WR35</td>
-      <td>8.01</td>
-      <td>9.0</td>
-      <td>83.0</td>
-      <td>9.22</td>
-      <td>12.18</td>
-      <td>-2.95</td>
-      <td>33.0</td>
-      <td>13.03</td>
-      <td>13.44</td>
-      <td>-0.41</td>
+      <td>12.85</td>
+      <td>12.85</td>
+      <td>0.00</td>
     </tr><tr data-pos="QB">
-      <td>85</td>
+      <td>82</td>
       <td>Trevor Lawrence</td>
+      <td>JAC</td>
       <td>QB10</td>
-      <td>8.02</td>
+      <td>7.12</td>
       <td>17.0</td>
       <td>338.2</td>
       <td>19.89</td>
       <td>17.42</td>
       <td>2.48</td>
       <td>43.0</td>
-      <td>17.35</td>
-      <td>17.53</td>
-      <td>-0.19</td>
+      <td>18.02</td>
+      <td>17.86</td>
+      <td>0.16</td>
+    </tr><tr data-pos="RB">
+      <td>83</td>
+      <td>J.K. Dobbins</td>
+      <td>DEN</td>
+      <td>RB32</td>
+      <td>8.01</td>
+      <td>10.0</td>
+      <td>115.9</td>
+      <td>11.59</td>
+      <td>12.13</td>
+      <td>-0.54</td>
+      <td>24.0</td>
+      <td>13.04</td>
+      <td>12.38</td>
+      <td>0.66</td>
+    </tr><tr data-pos="WR">
+      <td>84</td>
+      <td>Chris Godwin</td>
+      <td>TB</td>
+      <td>WR35</td>
+      <td>8.02</td>
+      <td>9.0</td>
+      <td>83.0</td>
+      <td>9.22</td>
+      <td>12.18</td>
+      <td>-2.95</td>
+      <td>33.0</td>
+      <td>12.65</td>
+      <td>12.85</td>
+      <td>-0.20</td>
+    </tr><tr data-pos="WR">
+      <td>85</td>
+      <td>Alec Pierce</td>
+      <td>IND</td>
+      <td>WR36</td>
+      <td>8.03</td>
+      <td>15.0</td>
+      <td>183.3</td>
+      <td>12.22</td>
+      <td>12.18</td>
+      <td>0.05</td>
+      <td>48.0</td>
+      <td>10.30</td>
+      <td>12.85</td>
+      <td>-2.55</td>
     </tr><tr data-pos="RB">
       <td>86</td>
-      <td>Blake Corum</td>
-      <td>RB33</td>
-      <td>8.03</td>
-      <td>17.0</td>
-      <td>122.2</td>
-      <td>7.19</td>
-      <td>12.13</td>
-      <td>-4.94</td>
-      <td>34.0</td>
-      <td>4.58</td>
-      <td>12.38</td>
-      <td>-7.80</td>
-    </tr><tr data-pos="RB">
-      <td>87</td>
       <td>Chuba Hubbard</td>
-      <td>RB34</td>
+      <td>CAR</td>
+      <td>RB33</td>
       <td>8.04</td>
       <td>15.0</td>
       <td>125.4</td>
@@ -1807,42 +1953,60 @@ None
       <td>12.13</td>
       <td>-3.77</td>
       <td>47.0</td>
-      <td>11.69</td>
+      <td>11.32</td>
       <td>12.38</td>
-      <td>-0.69</td>
+      <td>-1.05</td>
     </tr><tr data-pos="WR">
-      <td>88</td>
-      <td>Alec Pierce</td>
-      <td>WR36</td>
-      <td>8.05</td>
-      <td>15.0</td>
-      <td>183.3</td>
-      <td>12.22</td>
-      <td>12.18</td>
-      <td>0.05</td>
-      <td>48.0</td>
-      <td>9.17</td>
-      <td>13.44</td>
-      <td>-4.27</td>
-    </tr><tr data-pos="WR">
-      <td>89</td>
+      <td>87</td>
       <td>Michael Wilson</td>
+      <td>ARI</td>
       <td>WR37</td>
-      <td>8.06</td>
+      <td>8.05</td>
       <td>17.0</td>
       <td>220.6</td>
       <td>12.98</td>
       <td>12.18</td>
       <td>0.80</td>
       <td>46.0</td>
-      <td>9.99</td>
-      <td>13.44</td>
-      <td>-3.45</td>
+      <td>10.68</td>
+      <td>12.85</td>
+      <td>-2.17</td>
+    </tr><tr data-pos="RB">
+      <td>88</td>
+      <td>Blake Corum</td>
+      <td>LAR</td>
+      <td>RB34</td>
+      <td>8.06</td>
+      <td>17.0</td>
+      <td>122.2</td>
+      <td>7.19</td>
+      <td>12.13</td>
+      <td>-4.94</td>
+      <td>34.0</td>
+      <td>5.10</td>
+      <td>12.38</td>
+      <td>-7.28</td>
+    </tr><tr data-pos="RB">
+      <td>89</td>
+      <td>Jordan Mason</td>
+      <td>MIN</td>
+      <td>RB35</td>
+      <td>8.07</td>
+      <td>16.0</td>
+      <td>128.9</td>
+      <td>8.06</td>
+      <td>12.13</td>
+      <td>-4.07</td>
+      <td>45.0</td>
+      <td>7.43</td>
+      <td>12.38</td>
+      <td>-4.95</td>
     </tr><tr data-pos="RB">
       <td>90</td>
       <td>Jacory Croskey-Merritt</td>
-      <td>RB35</td>
-      <td>8.07</td>
+      <td>WAS</td>
+      <td>RB36</td>
+      <td>8.08</td>
       <td>17.0</td>
       <td>140.3</td>
       <td>8.25</td>
@@ -1852,95 +2016,147 @@ None
       <td>8.25</td>
       <td>12.38</td>
       <td>-4.13</td>
-    </tr><tr data-pos="RB">
-      <td>91</td>
-      <td>Jordan Mason</td>
-      <td>RB36</td>
-      <td>8.09</td>
-      <td>16.0</td>
-      <td>128.9</td>
-      <td>8.06</td>
-      <td>12.13</td>
-      <td>-4.07</td>
-      <td>45.0</td>
-      <td>6.41</td>
-      <td>12.38</td>
-      <td>-5.97</td>
-    </tr><tr data-pos="WR">
-      <td>92</td>
-      <td>Courtland Sutton</td>
-      <td>WR38</td>
-      <td>8.10</td>
-      <td>17.0</td>
-      <td>219.7</td>
-      <td>12.92</td>
-      <td>12.18</td>
-      <td>0.75</td>
-      <td>50.0</td>
-      <td>13.00</td>
-      <td>13.44</td>
-      <td>-0.43</td>
     </tr><tr data-pos="TE">
-      <td>93</td>
+      <td>91</td>
       <td>Dalton Kincaid</td>
+      <td>BUF</td>
       <td>TE10</td>
-      <td>8.11</td>
+      <td>8.09</td>
       <td>12.0</td>
       <td>126.1</td>
       <td>10.51</td>
       <td>10.52</td>
       <td>-0.01</td>
       <td>41.0</td>
-      <td>9.20</td>
-      <td>10.06</td>
-      <td>-0.86</td>
+      <td>9.36</td>
+      <td>9.90</td>
+      <td>-0.54</td>
     </tr><tr data-pos="WR">
-      <td>94</td>
+      <td>92</td>
       <td>Quentin Johnston</td>
-      <td>WR39</td>
-      <td>9.01</td>
+      <td>LAC</td>
+      <td>WR38</td>
+      <td>8.10</td>
       <td>14.0</td>
       <td>171.2</td>
       <td>12.23</td>
       <td>12.18</td>
       <td>0.05</td>
       <td>46.0</td>
-      <td>9.56</td>
-      <td>13.44</td>
-      <td>-3.87</td>
+      <td>10.75</td>
+      <td>12.85</td>
+      <td>-2.10</td>
+    </tr><tr data-pos="RB">
+      <td>93</td>
+      <td>Josh Jacobs</td>
+      <td>GB</td>
+      <td>RB37</td>
+      <td>8.11</td>
+      <td>15.0</td>
+      <td>237.1</td>
+      <td>15.81</td>
+      <td>12.13</td>
+      <td>3.68</td>
+      <td>45.0</td>
+      <td>16.07</td>
+      <td>12.38</td>
+      <td>3.69</td>
+    </tr><tr data-pos="WR">
+      <td>94</td>
+      <td>Courtland Sutton</td>
+      <td>DEN</td>
+      <td>WR39</td>
+      <td>8.12</td>
+      <td>17.0</td>
+      <td>219.7</td>
+      <td>12.92</td>
+      <td>12.18</td>
+      <td>0.75</td>
+      <td>50.0</td>
+      <td>13.17</td>
+      <td>12.85</td>
+      <td>0.32</td>
     </tr><tr data-pos="TE">
       <td>95</td>
       <td>Travis Kelce</td>
+      <td>KC</td>
       <td>TE11</td>
-      <td>9.02</td>
+      <td>9.01</td>
       <td>17.0</td>
       <td>193.2</td>
       <td>11.36</td>
       <td>10.52</td>
       <td>0.85</td>
       <td>48.0</td>
-      <td>12.67</td>
-      <td>10.06</td>
-      <td>2.60</td>
+      <td>12.14</td>
+      <td>9.90</td>
+      <td>2.24</td>
     </tr><tr data-pos="WR">
       <td>96</td>
       <td>Stefon Diggs</td>
+      <td>WAS</td>
       <td>WR40</td>
-      <td>9.03</td>
+      <td>9.02</td>
       <td>17.0</td>
       <td>210.3</td>
       <td>12.37</td>
       <td>12.18</td>
       <td>0.20</td>
       <td>42.0</td>
-      <td>14.43</td>
-      <td>13.44</td>
-      <td>0.99</td>
-    </tr><tr data-pos="RB">
+      <td>13.67</td>
+      <td>12.85</td>
+      <td>0.82</td>
+    </tr><tr data-pos="WR">
       <td>97</td>
-      <td>RJ Harvey</td>
-      <td>RB38</td>
+      <td>Josh Downs</td>
+      <td>IND</td>
+      <td>WR41</td>
       <td>9.04</td>
+      <td>16.0</td>
+      <td>136.4</td>
+      <td>8.52</td>
+      <td>12.18</td>
+      <td>-3.65</td>
+      <td>47.0</td>
+      <td>10.04</td>
+      <td>12.85</td>
+      <td>-2.82</td>
+    </tr><tr data-pos="WR" style="color: firebrick;">
+      <td>98</td>
+      <td>De'Zhaun Stribling</td>
+      <td>SF</td>
+      <td>WR42</td>
+      <td>9.05</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr><tr data-pos="QB">
+      <td>99</td>
+      <td>Matthew Stafford</td>
+      <td>LAR</td>
+      <td>QB11</td>
+      <td>9.06</td>
+      <td>17.0</td>
+      <td>350.4</td>
+      <td>20.61</td>
+      <td>17.42</td>
+      <td>3.20</td>
+      <td>48.0</td>
+      <td>17.59</td>
+      <td>17.86</td>
+      <td>-0.27</td>
+    </tr><tr data-pos="RB">
+      <td>100</td>
+      <td>RJ Harvey</td>
+      <td>DEN</td>
+      <td>RB38</td>
+      <td>9.07</td>
       <td>17.0</td>
       <td>206.6</td>
       <td>12.15</td>
@@ -1950,81 +2166,12 @@ None
       <td>12.15</td>
       <td>12.38</td>
       <td>-0.23</td>
-    </tr><tr data-pos="WR">
-      <td>98</td>
-      <td>Josh Downs</td>
-      <td>WR41</td>
-      <td>9.05</td>
-      <td>16.0</td>
-      <td>136.4</td>
-      <td>8.52</td>
-      <td>12.18</td>
-      <td>-3.65</td>
-      <td>47.0</td>
-      <td>10.15</td>
-      <td>13.44</td>
-      <td>-3.29</td>
-    </tr><tr data-pos="WR" style="color: firebrick;">
-      <td>99</td>
-      <td>De'Zhaun Stribling</td>
-      <td>WR42</td>
-      <td>9.06</td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-    </tr><tr data-pos="WR">
-      <td>100</td>
-      <td>Jayden Reed</td>
-      <td>WR43</td>
-      <td>9.08</td>
-      <td>7.0</td>
-      <td>48.5</td>
-      <td>6.93</td>
-      <td>12.18</td>
-      <td>-5.25</td>
-      <td>40.0</td>
-      <td>11.57</td>
-      <td>13.44</td>
-      <td>-1.87</td>
-    </tr><tr data-pos="WR">
+    </tr><tr data-pos="QB">
       <td>101</td>
-      <td>Jordan Addison</td>
-      <td>WR44</td>
-      <td>9.09</td>
-      <td>14.0</td>
-      <td>135.1</td>
-      <td>9.65</td>
-      <td>12.18</td>
-      <td>-2.52</td>
-      <td>46.0</td>
-      <td>12.37</td>
-      <td>13.44</td>
-      <td>-1.07</td>
-    </tr><tr data-pos="QB">
-      <td>102</td>
-      <td>Bo Nix</td>
-      <td>QB11</td>
-      <td>9.10</td>
-      <td>17.0</td>
-      <td>304.8</td>
-      <td>17.93</td>
-      <td>17.42</td>
-      <td>0.51</td>
-      <td>34.0</td>
-      <td>18.29</td>
-      <td>17.53</td>
-      <td>0.76</td>
-    </tr><tr data-pos="QB">
-      <td>103</td>
       <td>Jaxson Dart</td>
+      <td>NYG</td>
       <td>QB12</td>
-      <td>9.11</td>
+      <td>9.08</td>
       <td>14.0</td>
       <td>241.6</td>
       <td>17.26</td>
@@ -2032,12 +2179,58 @@ None
       <td>-0.16</td>
       <td>14.0</td>
       <td>17.26</td>
-      <td>17.53</td>
-      <td>-0.28</td>
+      <td>17.86</td>
+      <td>-0.60</td>
     </tr><tr data-pos="QB">
-      <td>104</td>
-      <td>Brock Purdy</td>
+      <td>102</td>
+      <td>Bo Nix</td>
+      <td>DEN</td>
       <td>QB13</td>
+      <td>9.09</td>
+      <td>17.0</td>
+      <td>304.8</td>
+      <td>17.93</td>
+      <td>17.42</td>
+      <td>0.51</td>
+      <td>34.0</td>
+      <td>18.22</td>
+      <td>17.86</td>
+      <td>0.36</td>
+    </tr><tr data-pos="WR">
+      <td>103</td>
+      <td>Jayden Reed</td>
+      <td>GB</td>
+      <td>WR43</td>
+      <td>9.10</td>
+      <td>7.0</td>
+      <td>48.5</td>
+      <td>6.93</td>
+      <td>12.18</td>
+      <td>-5.25</td>
+      <td>40.0</td>
+      <td>10.66</td>
+      <td>12.85</td>
+      <td>-2.19</td>
+    </tr><tr data-pos="WR">
+      <td>104</td>
+      <td>Jordan Addison</td>
+      <td>MIN</td>
+      <td>WR44</td>
+      <td>9.11</td>
+      <td>14.0</td>
+      <td>135.1</td>
+      <td>9.65</td>
+      <td>12.18</td>
+      <td>-2.52</td>
+      <td>46.0</td>
+      <td>11.82</td>
+      <td>12.85</td>
+      <td>-1.03</td>
+    </tr><tr data-pos="QB">
+      <td>105</td>
+      <td>Brock Purdy</td>
+      <td>SF</td>
+      <td>QB14</td>
       <td>9.12</td>
       <td>9.0</td>
       <td>177.4</td>
@@ -2045,69 +2238,59 @@ None
       <td>17.42</td>
       <td>2.30</td>
       <td>40.0</td>
-      <td>18.50</td>
-      <td>17.53</td>
-      <td>0.96</td>
-    </tr><tr data-pos="QB">
-      <td>105</td>
-      <td>Matthew Stafford</td>
-      <td>QB14</td>
-      <td>10.01</td>
-      <td>17.0</td>
-      <td>350.4</td>
-      <td>20.61</td>
-      <td>17.42</td>
-      <td>3.20</td>
-      <td>48.0</td>
-      <td>16.84</td>
-      <td>17.53</td>
-      <td>-0.70</td>
+      <td>18.65</td>
+      <td>17.86</td>
+      <td>0.80</td>
     </tr><tr data-pos="TE">
       <td>106</td>
       <td>Isaiah Likely</td>
+      <td>NYG</td>
       <td>TE12</td>
-      <td>10.02</td>
+      <td>10.01</td>
       <td>14.0</td>
       <td>61.7</td>
       <td>4.41</td>
       <td>10.52</td>
       <td>-6.11</td>
       <td>47.0</td>
-      <td>6.10</td>
-      <td>10.06</td>
-      <td>-3.97</td>
-    </tr><tr data-pos="RB">
+      <td>5.86</td>
+      <td>9.90</td>
+      <td>-4.03</td>
+    </tr><tr data-pos="TE">
       <td>107</td>
-      <td>Kyle Monangai</td>
-      <td>RB39</td>
-      <td>10.03</td>
-      <td>17.0</td>
-      <td>146.7</td>
-      <td>8.63</td>
-      <td>12.13</td>
-      <td>-3.50</td>
-      <td>17.0</td>
-      <td>8.63</td>
-      <td>12.38</td>
-      <td>-3.75</td>
+      <td>Dallas Goedert</td>
+      <td>PHI</td>
+      <td>TE13</td>
+      <td>10.02</td>
+      <td>15.0</td>
+      <td>185.1</td>
+      <td>12.34</td>
+      <td>10.52</td>
+      <td>1.82</td>
+      <td>39.0</td>
+      <td>11.38</td>
+      <td>9.90</td>
+      <td>1.48</td>
     </tr><tr data-pos="WR">
       <td>108</td>
       <td>Michael Pittman Jr.</td>
+      <td>PIT</td>
       <td>WR45</td>
-      <td>10.04</td>
+      <td>10.03</td>
       <td>17.0</td>
       <td>202.4</td>
       <td>11.91</td>
       <td>12.18</td>
       <td>-0.27</td>
       <td>49.0</td>
-      <td>12.62</td>
-      <td>13.44</td>
-      <td>-0.82</td>
-    </tr><tr data-pos="RB" style="color: firebrick;">
+      <td>12.01</td>
+      <td>12.85</td>
+      <td>-0.84</td>
+    </tr><tr data-pos="WR" style="color: firebrick;">
       <td>109</td>
-      <td>Kenny Gainwell</td>
-      <td>RB40</td>
+      <td>KC Concepcion</td>
+      <td>CLE</td>
+      <td>WR46</td>
       <td>10.05</td>
       <td></td>
       <td></td>
@@ -2118,37 +2301,25 @@ None
       <td></td>
       <td></td>
       <td></td>
-    </tr><tr data-pos="TE">
+    </tr><tr data-pos="RB">
       <td>110</td>
-      <td>Dallas Goedert</td>
-      <td>TE13</td>
-      <td>10.06</td>
-      <td>15.0</td>
-      <td>185.1</td>
-      <td>12.34</td>
-      <td>10.52</td>
-      <td>1.82</td>
-      <td>39.0</td>
-      <td>10.90</td>
-      <td>10.06</td>
-      <td>0.84</td>
+      <td>Kyle Monangai</td>
+      <td>CHI</td>
+      <td>RB39</td>
+      <td>10.07</td>
+      <td>17.0</td>
+      <td>146.7</td>
+      <td>8.63</td>
+      <td>12.13</td>
+      <td>-3.50</td>
+      <td>17.0</td>
+      <td>8.63</td>
+      <td>12.38</td>
+      <td>-3.75</td>
     </tr><tr data-pos="WR" style="color: firebrick;">
       <td>111</td>
-      <td>KC Concepcion</td>
-      <td>WR46</td>
-      <td>10.07</td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-    </tr><tr data-pos="WR" style="color: firebrick;">
-      <td>112</td>
       <td>Makai Lemon</td>
+      <td>PHI</td>
       <td>WR47</td>
       <td>10.08</td>
       <td></td>
@@ -2160,25 +2331,57 @@ None
       <td></td>
       <td></td>
       <td></td>
-    </tr><tr data-pos="QB">
-      <td>113</td>
-      <td>Patrick Mahomes</td>
-      <td>QB15</td>
+    </tr><tr data-pos="RB" style="color: firebrick;">
+      <td>112</td>
+      <td>Kenny Gainwell</td>
+      <td>TB</td>
+      <td>RB40</td>
       <td>10.09</td>
-      <td>14.0</td>
-      <td>285.7</td>
-      <td>20.41</td>
-      <td>17.42</td>
-      <td>2.99</td>
-      <td>46.0</td>
-      <td>18.45</td>
-      <td>17.53</td>
-      <td>0.92</td>
-    </tr><tr data-pos="WR">
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr><tr data-pos="TE">
+      <td>113</td>
+      <td>Mark Andrews</td>
+      <td>BAL</td>
+      <td>TE14</td>
+      <td>10.10</td>
+      <td>17.0</td>
+      <td>131.0</td>
+      <td>7.71</td>
+      <td>10.52</td>
+      <td>-2.81</td>
+      <td>44.0</td>
+      <td>9.54</td>
+      <td>9.90</td>
+      <td>-0.36</td>
+    </tr><tr data-pos="RB">
       <td>114</td>
-      <td>Matthew Golden</td>
-      <td>WR48</td>
+      <td>Aaron Jones</td>
+      <td>MIN</td>
+      <td>RB41</td>
       <td>10.11</td>
+      <td>12.0</td>
+      <td>118.7</td>
+      <td>9.89</td>
+      <td>12.13</td>
+      <td>-2.24</td>
+      <td>40.0</td>
+      <td>12.03</td>
+      <td>12.38</td>
+      <td>-0.35</td>
+    </tr><tr data-pos="WR">
+      <td>115</td>
+      <td>Matthew Golden</td>
+      <td>GB</td>
+      <td>WR48</td>
+      <td>11.01</td>
       <td>14.0</td>
       <td>70.0</td>
       <td>5.00</td>
@@ -2186,181 +2389,179 @@ None
       <td>-7.17</td>
       <td>14.0</td>
       <td>5.00</td>
-      <td>13.44</td>
-      <td>-8.44</td>
-    </tr><tr data-pos="TE">
-      <td>115</td>
-      <td>Mark Andrews</td>
-      <td>TE14</td>
-      <td>10.12</td>
-      <td>17.0</td>
-      <td>131.0</td>
-      <td>7.71</td>
-      <td>10.52</td>
-      <td>-2.81</td>
-      <td>44.0</td>
-      <td>10.35</td>
-      <td>10.06</td>
-      <td>0.28</td>
-    </tr><tr data-pos="RB">
+      <td>12.85</td>
+      <td>-7.85</td>
+    </tr><tr data-pos="QB">
       <td>116</td>
-      <td>Aaron Jones</td>
-      <td>RB41</td>
-      <td>11.01</td>
-      <td>12.0</td>
-      <td>118.7</td>
-      <td>9.89</td>
-      <td>12.13</td>
-      <td>-2.24</td>
-      <td>40.0</td>
-      <td>12.38</td>
-      <td>12.38</td>
-      <td>0.00</td>
+      <td>Patrick Mahomes</td>
+      <td>KC</td>
+      <td>QB15</td>
+      <td>11.02</td>
+      <td>14.0</td>
+      <td>285.7</td>
+      <td>20.41</td>
+      <td>17.42</td>
+      <td>2.99</td>
+      <td>46.0</td>
+      <td>18.93</td>
+      <td>17.86</td>
+      <td>1.07</td>
     </tr><tr data-pos="QB">
       <td>117</td>
       <td>Jared Goff</td>
+      <td>DET</td>
       <td>QB16</td>
-      <td>11.02</td>
+      <td>11.04</td>
       <td>17.0</td>
       <td>297.1</td>
       <td>17.48</td>
       <td>17.42</td>
       <td>0.06</td>
       <td>51.0</td>
+      <td>17.94</td>
       <td>17.86</td>
-      <td>17.53</td>
-      <td>0.32</td>
-    </tr><tr data-pos="TE">
-      <td>118</td>
-      <td>Jake Ferguson</td>
-      <td>TE15</td>
-      <td>11.03</td>
-      <td>17.0</td>
-      <td>188.1</td>
-      <td>11.06</td>
-      <td>10.52</td>
-      <td>0.55</td>
-      <td>48.0</td>
-      <td>9.78</td>
-      <td>10.06</td>
-      <td>-0.28</td>
+      <td>0.08</td>
     </tr><tr data-pos="RB">
-      <td>119</td>
+      <td>118</td>
       <td>Chris Rodriguez</td>
+      <td>JAC</td>
       <td>RB42</td>
-      <td>11.04</td>
+      <td>11.05</td>
       <td>13.0</td>
       <td>92.0</td>
       <td>7.08</td>
       <td>12.13</td>
       <td>-5.05</td>
       <td>35.0</td>
-      <td>4.61</td>
+      <td>5.38</td>
       <td>12.38</td>
-      <td>-7.77</td>
+      <td>-7.00</td>
     </tr><tr data-pos="RB">
-      <td>120</td>
+      <td>119</td>
       <td>Rachaad White</td>
+      <td>WAS</td>
       <td>RB43</td>
-      <td>11.05</td>
+      <td>11.06</td>
       <td>17.0</td>
       <td>143.0</td>
       <td>8.41</td>
       <td>12.13</td>
       <td>-3.72</td>
       <td>50.0</td>
-      <td>12.21</td>
+      <td>10.96</td>
       <td>12.38</td>
-      <td>-0.17</td>
-    </tr><tr data-pos="WR">
-      <td>121</td>
-      <td>Wan'Dale Robinson</td>
-      <td>WR49</td>
-      <td>11.06</td>
-      <td>16.0</td>
-      <td>217.9</td>
-      <td>13.62</td>
-      <td>12.18</td>
-      <td>1.44</td>
-      <td>48.0</td>
-      <td>11.12</td>
-      <td>13.44</td>
-      <td>-2.32</td>
-    </tr><tr data-pos="RB" style="color: firebrick;">
-      <td>122</td>
-      <td>Mike Washington Jr.</td>
-      <td>RB44</td>
-      <td>11.08</td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
+      <td>-1.42</td>
     </tr><tr data-pos="QB">
-      <td>123</td>
+      <td>120</td>
       <td>Kyler Murray</td>
+      <td>MIN</td>
       <td>QB17</td>
-      <td>11.10</td>
+      <td>11.07</td>
       <td>5.0</td>
       <td>77.8</td>
       <td>15.56</td>
       <td>17.42</td>
       <td>-1.86</td>
       <td>30.0</td>
-      <td>17.38</td>
-      <td>17.53</td>
-      <td>-0.15</td>
-    </tr><tr data-pos="WR" style="color: firebrick;">
-      <td>124</td>
-      <td>Jordyn Tyson</td>
-      <td>WR50</td>
-      <td>11.11</td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
+      <td>17.09</td>
+      <td>17.86</td>
+      <td>-0.77</td>
     </tr><tr data-pos="WR">
-      <td>125</td>
-      <td>Jalen Coker</td>
-      <td>WR51</td>
-      <td>12.01</td>
-      <td>11.0</td>
-      <td>90.4</td>
-      <td>8.22</td>
+      <td>121</td>
+      <td>Wan'Dale Robinson</td>
+      <td>TEN</td>
+      <td>WR49</td>
+      <td>11.08</td>
+      <td>16.0</td>
+      <td>217.9</td>
+      <td>13.62</td>
       <td>12.18</td>
-      <td>-3.96</td>
-      <td>22.0</td>
-      <td>8.32</td>
-      <td>13.44</td>
-      <td>-5.12</td>
+      <td>1.44</td>
+      <td>48.0</td>
+      <td>11.88</td>
+      <td>12.85</td>
+      <td>-0.97</td>
+    </tr><tr data-pos="RB" style="color: firebrick;">
+      <td>122</td>
+      <td>Mike Washington Jr.</td>
+      <td>LV</td>
+      <td>RB44</td>
+      <td>11.09</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
     </tr><tr data-pos="TE">
-      <td>126</td>
+      <td>123</td>
+      <td>Jake Ferguson</td>
+      <td>DAL</td>
+      <td>TE15</td>
+      <td>11.10</td>
+      <td>17.0</td>
+      <td>188.1</td>
+      <td>11.06</td>
+      <td>10.52</td>
+      <td>0.55</td>
+      <td>48.0</td>
+      <td>9.90</td>
+      <td>9.90</td>
+      <td>0.00</td>
+    </tr><tr data-pos="WR">
+      <td>124</td>
+      <td>Xavier Worthy</td>
+      <td>KC</td>
+      <td>WR50</td>
+      <td>11.12</td>
+      <td>14.0</td>
+      <td>109.9</td>
+      <td>7.85</td>
+      <td>12.18</td>
+      <td>-4.32</td>
+      <td>31.0</td>
+      <td>9.26</td>
+      <td>12.85</td>
+      <td>-3.59</td>
+    </tr><tr data-pos="TE">
+      <td>125</td>
       <td>Juwan Johnson</td>
+      <td>NO</td>
       <td>TE16</td>
-      <td>12.02</td>
+      <td>12.03</td>
       <td>17.0</td>
       <td>179.9</td>
       <td>10.58</td>
       <td>10.52</td>
       <td>0.06</td>
       <td>47.0</td>
-      <td>8.52</td>
-      <td>10.06</td>
-      <td>-1.54</td>
+      <td>9.01</td>
+      <td>9.90</td>
+      <td>-0.89</td>
+    </tr><tr data-pos="WR">
+      <td>126</td>
+      <td>Jalen Coker</td>
+      <td>CAR</td>
+      <td>WR51</td>
+      <td>12.04</td>
+      <td>11.0</td>
+      <td>90.4</td>
+      <td>8.22</td>
+      <td>12.18</td>
+      <td>-3.96</td>
+      <td>22.0</td>
+      <td>8.30</td>
+      <td>12.85</td>
+      <td>-4.55</td>
     </tr><tr data-pos="RB">
       <td>127</td>
       <td>Woody Marks</td>
+      <td>HOU</td>
       <td>RB45</td>
-      <td>12.03</td>
+      <td>12.05</td>
       <td>16.0</td>
       <td>151.1</td>
       <td>9.44</td>
@@ -2372,148 +2573,159 @@ None
       <td>-2.94</td>
     </tr><tr data-pos="WR">
       <td>128</td>
-      <td>Romeo Doubs</td>
-      <td>WR52</td>
-      <td>12.04</td>
-      <td>16.0</td>
-      <td>165.4</td>
-      <td>10.34</td>
-      <td>12.18</td>
-      <td>-1.84</td>
-      <td>46.0</td>
-      <td>10.26</td>
-      <td>13.44</td>
-      <td>-3.18</td>
-    </tr><tr data-pos="WR">
-      <td>129</td>
-      <td>Xavier Worthy</td>
-      <td>WR53</td>
-      <td>12.06</td>
-      <td>14.0</td>
-      <td>109.9</td>
-      <td>7.85</td>
-      <td>12.18</td>
-      <td>-4.32</td>
-      <td>31.0</td>
-      <td>9.58</td>
-      <td>13.44</td>
-      <td>-3.85</td>
-    </tr><tr data-pos="QB">
-      <td>130</td>
-      <td>Jordan Love</td>
-      <td>QB18</td>
-      <td>12.07</td>
-      <td>15.0</td>
-      <td>235.1</td>
-      <td>15.67</td>
-      <td>17.42</td>
-      <td>-1.74</td>
-      <td>47.0</td>
-      <td>16.77</td>
-      <td>17.53</td>
-      <td>-0.76</td>
-    </tr><tr data-pos="WR">
-      <td>131</td>
       <td>Jakobi Meyers</td>
-      <td>WR54</td>
-      <td>12.08</td>
+      <td>JAC</td>
+      <td>WR52</td>
+      <td>12.06</td>
       <td>16.0</td>
       <td>175.8</td>
       <td>10.99</td>
       <td>12.18</td>
       <td>-1.19</td>
       <td>47.0</td>
-      <td>13.03</td>
-      <td>13.44</td>
-      <td>-0.41</td>
+      <td>12.57</td>
+      <td>12.85</td>
+      <td>-0.28</td>
+    </tr><tr data-pos="WR">
+      <td>129</td>
+      <td>Romeo Doubs</td>
+      <td>NE</td>
+      <td>WR53</td>
+      <td>12.07</td>
+      <td>16.0</td>
+      <td>165.4</td>
+      <td>10.34</td>
+      <td>12.18</td>
+      <td>-1.84</td>
+      <td>46.0</td>
+      <td>10.27</td>
+      <td>12.85</td>
+      <td>-2.58</td>
     </tr><tr data-pos="RB">
-      <td>132</td>
+      <td>130</td>
       <td>Tyler Allgeier</td>
+      <td>ARI</td>
       <td>RB46</td>
-      <td>12.09</td>
+      <td>12.08</td>
       <td>17.0</td>
       <td>123.0</td>
       <td>7.24</td>
       <td>12.13</td>
       <td>-4.89</td>
       <td>51.0</td>
-      <td>7.19</td>
+      <td>7.05</td>
       <td>12.38</td>
-      <td>-5.19</td>
-    </tr><tr data-pos="WR">
-      <td>133</td>
-      <td>Deebo Samuel</td>
-      <td>WR55</td>
+      <td>-5.33</td>
+    </tr><tr data-pos="QB">
+      <td>131</td>
+      <td>Jordan Love</td>
+      <td>GB</td>
+      <td>QB18</td>
       <td>12.10</td>
-      <td>16.0</td>
-      <td>188.2</td>
-      <td>11.76</td>
-      <td>12.18</td>
-      <td>-0.41</td>
-      <td>46.0</td>
-      <td>12.73</td>
-      <td>13.44</td>
-      <td>-0.71</td>
+      <td>15.0</td>
+      <td>235.1</td>
+      <td>15.67</td>
+      <td>17.42</td>
+      <td>-1.74</td>
+      <td>47.0</td>
+      <td>16.22</td>
+      <td>17.86</td>
+      <td>-1.64</td>
     </tr><tr data-pos="RB">
-      <td>134</td>
+      <td>132</td>
       <td>Keaton Mitchell</td>
+      <td>LAC</td>
       <td>RB47</td>
-      <td>12.12</td>
+      <td>12.11</td>
       <td>13.0</td>
       <td>55.4</td>
       <td>4.26</td>
       <td>12.13</td>
       <td>-7.87</td>
       <td>26.0</td>
-      <td>5.08</td>
+      <td>4.38</td>
       <td>12.38</td>
-      <td>-7.30</td>
-    </tr><tr data-pos="RB">
-      <td>135</td>
-      <td>Zach Charbonnet</td>
-      <td>RB48</td>
-      <td>13.02</td>
-      <td>16.0</td>
-      <td>181.4</td>
-      <td>11.34</td>
-      <td>12.13</td>
-      <td>-0.79</td>
-      <td>49.0</td>
-      <td>9.68</td>
-      <td>12.38</td>
-      <td>-2.70</td>
-    </tr><tr data-pos="QB">
-      <td>136</td>
-      <td>Baker Mayfield</td>
-      <td>QB19</td>
-      <td>13.04</td>
-      <td>17.0</td>
-      <td>271.9</td>
-      <td>15.99</td>
-      <td>17.42</td>
-      <td>-1.42</td>
-      <td>51.0</td>
-      <td>17.88</td>
-      <td>17.53</td>
-      <td>0.35</td>
+      <td>-8.00</td>
     </tr><tr data-pos="WR">
-      <td>137</td>
+      <td>133</td>
       <td>Rashid Shaheed</td>
-      <td>WR56</td>
-      <td>13.05</td>
+      <td>SEA</td>
+      <td>WR54</td>
+      <td>12.12</td>
       <td>18.0</td>
       <td>156.6</td>
       <td>8.70</td>
       <td>12.18</td>
       <td>-3.47</td>
       <td>39.0</td>
-      <td>10.05</td>
-      <td>13.44</td>
-      <td>-3.39</td>
+      <td>9.69</td>
+      <td>12.85</td>
+      <td>-3.16</td>
+    </tr><tr data-pos="WR">
+      <td>134</td>
+      <td>Deebo Samuel</td>
+      <td>SF</td>
+      <td>WR55</td>
+      <td>13.01</td>
+      <td>16.0</td>
+      <td>188.2</td>
+      <td>11.76</td>
+      <td>12.18</td>
+      <td>-0.41</td>
+      <td>46.0</td>
+      <td>11.99</td>
+      <td>12.85</td>
+      <td>-0.86</td>
+    </tr><tr data-pos="RB">
+      <td>135</td>
+      <td>Tyjae Spears</td>
+      <td>TEN</td>
+      <td>RB48</td>
+      <td>13.02</td>
+      <td>13.0</td>
+      <td>111.7</td>
+      <td>8.59</td>
+      <td>12.13</td>
+      <td>-3.54</td>
+      <td>42.0</td>
+      <td>8.95</td>
+      <td>12.38</td>
+      <td>-3.43</td>
+    </tr><tr data-pos="RB">
+      <td>136</td>
+      <td>Zach Charbonnet</td>
+      <td>SEA</td>
+      <td>RB49</td>
+      <td>13.03</td>
+      <td>16.0</td>
+      <td>181.4</td>
+      <td>11.34</td>
+      <td>12.13</td>
+      <td>-0.79</td>
+      <td>49.0</td>
+      <td>10.45</td>
+      <td>12.38</td>
+      <td>-1.93</td>
+    </tr><tr data-pos="WR" style="color: firebrick;">
+      <td>137</td>
+      <td>Jordyn Tyson</td>
+      <td>NO</td>
+      <td>WR56</td>
+      <td>13.04</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
     </tr><tr data-pos="RB" style="color: firebrick;">
       <td>138</td>
       <td>Jonah Coleman</td>
-      <td>RB49</td>
+      <td>DEN</td>
+      <td>RB50</td>
       <td>13.06</td>
       <td></td>
       <td></td>
@@ -2524,23 +2736,25 @@ None
       <td></td>
       <td></td>
       <td></td>
-    </tr><tr data-pos="TE">
+    </tr><tr data-pos="QB">
       <td>139</td>
-      <td>Hunter Henry</td>
-      <td>TE17</td>
+      <td>Baker Mayfield</td>
+      <td>TB</td>
+      <td>QB19</td>
       <td>13.08</td>
       <td>17.0</td>
-      <td>178.8</td>
-      <td>10.52</td>
-      <td>10.52</td>
+      <td>271.9</td>
+      <td>15.99</td>
+      <td>17.42</td>
+      <td>-1.42</td>
+      <td>51.0</td>
+      <td>17.86</td>
+      <td>17.86</td>
       <td>0.00</td>
-      <td>47.0</td>
-      <td>9.45</td>
-      <td>10.06</td>
-      <td>-0.61</td>
     </tr><tr data-pos="WR">
       <td>140</td>
       <td>Khalil Shakir</td>
+      <td>BUF</td>
       <td>WR57</td>
       <td>13.09</td>
       <td>16.0</td>
@@ -2549,28 +2763,120 @@ None
       <td>12.18</td>
       <td>-1.77</td>
       <td>48.0</td>
-      <td>9.62</td>
-      <td>13.44</td>
-      <td>-3.81</td>
-    </tr><tr data-pos="RB">
+      <td>10.29</td>
+      <td>12.85</td>
+      <td>-2.56</td>
+    </tr><tr data-pos="TE">
       <td>141</td>
-      <td>Tyjae Spears</td>
+      <td>Hunter Henry</td>
+      <td>NE</td>
+      <td>TE17</td>
+      <td>13.11</td>
+      <td>17.0</td>
+      <td>178.8</td>
+      <td>10.52</td>
+      <td>10.52</td>
+      <td>0.00</td>
+      <td>47.0</td>
+      <td>9.76</td>
+      <td>9.90</td>
+      <td>-0.13</td>
+    </tr><tr data-pos="RB">
+      <td>142</td>
+      <td>Tank Bigsby</td>
+      <td>PHI</td>
       <td>RB51</td>
       <td>13.12</td>
-      <td>13.0</td>
-      <td>111.7</td>
-      <td>8.59</td>
+      <td>17.0</td>
+      <td>53.8</td>
+      <td>3.16</td>
       <td>12.13</td>
-      <td>-3.54</td>
-      <td>42.0</td>
-      <td>9.03</td>
+      <td>-8.96</td>
+      <td>50.0</td>
+      <td>4.42</td>
       <td>12.38</td>
-      <td>-3.35</td>
+      <td>-7.96</td>
+    </tr><tr data-pos="TE">
+      <td>143</td>
+      <td>Dalton Schultz</td>
+      <td>HOU</td>
+      <td>TE18</td>
+      <td>14.01</td>
+      <td>17.0</td>
+      <td>177.7</td>
+      <td>10.45</td>
+      <td>10.52</td>
+      <td>-0.06</td>
+      <td>49.0</td>
+      <td>9.20</td>
+      <td>9.90</td>
+      <td>-0.70</td>
     </tr><tr data-pos="QB">
-      <td>142</td>
-      <td>Tyler Shough</td>
+      <td>144</td>
+      <td>Sam Darnold</td>
+      <td>SEA</td>
       <td>QB20</td>
       <td>14.02</td>
+      <td>17.0</td>
+      <td>235.4</td>
+      <td>13.85</td>
+      <td>17.42</td>
+      <td>-3.57</td>
+      <td>44.0</td>
+      <td>14.16</td>
+      <td>17.86</td>
+      <td>-3.69</td>
+    </tr><tr data-pos="QB">
+      <td>145</td>
+      <td>Malik Willis</td>
+      <td>MIA</td>
+      <td>QB21</td>
+      <td>14.05</td>
+      <td>4.0</td>
+      <td>51.2</td>
+      <td>12.80</td>
+      <td>17.42</td>
+      <td>-4.62</td>
+      <td>14.0</td>
+      <td>8.98</td>
+      <td>17.86</td>
+      <td>-8.88</td>
+    </tr><tr data-pos="RB">
+      <td>146</td>
+      <td>Brian Robinson Jr.</td>
+      <td>ATL</td>
+      <td>RB52</td>
+      <td>14.06</td>
+      <td>17.0</td>
+      <td>62.5</td>
+      <td>3.68</td>
+      <td>12.13</td>
+      <td>-8.45</td>
+      <td>46.0</td>
+      <td>7.50</td>
+      <td>12.38</td>
+      <td>-4.88</td>
+    </tr><tr data-pos="RB" style="color: firebrick;">
+      <td>147</td>
+      <td>Kaelon Black</td>
+      <td>SF</td>
+      <td>RB53</td>
+      <td>14.07</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr><tr data-pos="QB">
+      <td>148</td>
+      <td>Tyler Shough</td>
+      <td>NO</td>
+      <td>QB22</td>
+      <td>14.08</td>
       <td>11.0</td>
       <td>158.0</td>
       <td>14.36</td>
@@ -2578,181 +2884,149 @@ None
       <td>-3.05</td>
       <td>11.0</td>
       <td>14.36</td>
-      <td>17.53</td>
-      <td>-3.17</td>
-    </tr><tr data-pos="QB">
-      <td>143</td>
-      <td>Malik Willis</td>
-      <td>QB21</td>
-      <td>14.03</td>
-      <td>4.0</td>
-      <td>51.2</td>
-      <td>12.80</td>
-      <td>17.42</td>
-      <td>-4.62</td>
-      <td>14.0</td>
-      <td>7.58</td>
-      <td>17.53</td>
-      <td>-9.95</td>
+      <td>17.86</td>
+      <td>-3.49</td>
     </tr><tr data-pos="TE">
-      <td>144</td>
-      <td>Chig Okonkwo</td>
-      <td>TE18</td>
-      <td>14.07</td>
-      <td>17.0</td>
-      <td>124.0</td>
-      <td>7.29</td>
-      <td>10.52</td>
-      <td>-3.22</td>
-      <td>51.0</td>
-      <td>6.88</td>
-      <td>10.06</td>
-      <td>-3.18</td>
-    </tr><tr data-pos="RB" style="color: firebrick;">
-      <td>145</td>
-      <td>Kaelon Black</td>
-      <td>RB53</td>
-      <td>14.08</td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-    </tr><tr data-pos="RB">
-      <td>146</td>
-      <td>Alvin Kamara</td>
-      <td>RB54</td>
-      <td>14.09</td>
-      <td>11.0</td>
-      <td>100.7</td>
-      <td>9.15</td>
-      <td>12.13</td>
-      <td>-2.97</td>
-      <td>38.0</td>
-      <td>15.76</td>
-      <td>12.38</td>
-      <td>3.38</td>
-    </tr><tr data-pos="WR" style="color: firebrick;">
-      <td>147</td>
-      <td>Denzel Boston</td>
-      <td>WR58</td>
-      <td>14.10</td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-    </tr><tr data-pos="TE">
-      <td>148</td>
+      <td>149</td>
       <td>Brenton Strange</td>
+      <td>JAC</td>
       <td>TE19</td>
-      <td>14.11</td>
+      <td>14.09</td>
       <td>12.0</td>
       <td>118.0</td>
       <td>9.83</td>
       <td>10.52</td>
       <td>-0.68</td>
       <td>43.0</td>
-      <td>5.20</td>
-      <td>10.06</td>
-      <td>-4.86</td>
-    </tr><tr data-pos="WR" style="color: firebrick;">
-      <td>149</td>
-      <td>Ja'Kobi Lane</td>
-      <td>WR59</td>
-      <td>14.12</td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-    </tr><tr data-pos="RB">
-      <td>150</td>
-      <td>Isiah Pacheco</td>
-      <td>RB55</td>
-      <td>15.01</td>
-      <td>13.0</td>
-      <td>87.3</td>
-      <td>6.72</td>
-      <td>12.13</td>
-      <td>-5.41</td>
-      <td>34.0</td>
-      <td>10.53</td>
-      <td>12.38</td>
-      <td>-1.85</td>
-    </tr><tr data-pos="TE">
-      <td>151</td>
-      <td>Dalton Schultz</td>
-      <td>TE20</td>
-      <td>15.03</td>
-      <td>17.0</td>
-      <td>177.7</td>
-      <td>10.45</td>
-      <td>10.52</td>
-      <td>-0.06</td>
-      <td>49.0</td>
-      <td>9.11</td>
-      <td>10.06</td>
-      <td>-0.95</td>
-    </tr><tr data-pos="QB">
-      <td>152</td>
-      <td>Sam Darnold</td>
-      <td>QB22</td>
-      <td>15.04</td>
-      <td>17.0</td>
-      <td>235.4</td>
-      <td>13.85</td>
-      <td>17.42</td>
-      <td>-3.57</td>
-      <td>44.0</td>
-      <td>12.88</td>
-      <td>17.53</td>
-      <td>-4.65</td>
+      <td>6.56</td>
+      <td>9.90</td>
+      <td>-3.34</td>
     </tr><tr data-pos="WR">
-      <td>153</td>
+      <td>150</td>
       <td>Keenan Allen</td>
-      <td>WR60</td>
-      <td>15.05</td>
+      <td>IND</td>
+      <td>WR58</td>
+      <td>14.10</td>
       <td>17.0</td>
       <td>182.7</td>
       <td>10.75</td>
       <td>12.18</td>
       <td>-1.43</td>
       <td>45.0</td>
-      <td>14.36</td>
-      <td>13.44</td>
-      <td>0.92</td>
+      <td>12.72</td>
+      <td>12.85</td>
+      <td>-0.13</td>
+    </tr><tr data-pos="WR" style="color: firebrick;">
+      <td>151</td>
+      <td>Denzel Boston</td>
+      <td>CLE</td>
+      <td>WR59</td>
+      <td>14.11</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
     </tr><tr data-pos="WR">
-      <td>154</td>
+      <td>152</td>
       <td>Tre Tucker</td>
-      <td>WR61</td>
-      <td>15.07</td>
+      <td>LV</td>
+      <td>WR60</td>
+      <td>15.01</td>
       <td>17.0</td>
       <td>161.7</td>
       <td>9.51</td>
       <td>12.18</td>
       <td>-2.66</td>
       <td>50.0</td>
-      <td>7.26</td>
-      <td>13.44</td>
+      <td>8.07</td>
+      <td>12.85</td>
+      <td>-4.78</td>
+    </tr><tr data-pos="WR" style="color: firebrick;">
+      <td>153</td>
+      <td>Ja'Kobi Lane</td>
+      <td>BAL</td>
+      <td>WR61</td>
+      <td>15.02</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr><tr data-pos="RB">
+      <td>154</td>
+      <td>Alvin Kamara</td>
+      <td>NO</td>
+      <td>RB54</td>
+      <td>15.03</td>
+      <td>11.0</td>
+      <td>100.7</td>
+      <td>9.15</td>
+      <td>12.13</td>
+      <td>-2.97</td>
+      <td>38.0</td>
+      <td>14.40</td>
+      <td>12.38</td>
+      <td>2.02</td>
+    </tr><tr data-pos="TE">
+      <td>155</td>
+      <td>Chig Okonkwo</td>
+      <td>WAS</td>
+      <td>TE20</td>
+      <td>15.06</td>
+      <td>17.0</td>
+      <td>124.0</td>
+      <td>7.29</td>
+      <td>10.52</td>
+      <td>-3.22</td>
+      <td>51.0</td>
+      <td>6.99</td>
+      <td>9.90</td>
+      <td>-2.91</td>
+    </tr><tr data-pos="QB">
+      <td>156</td>
+      <td>C.J. Stroud</td>
+      <td>HOU</td>
+      <td>QB23</td>
+      <td>15.07</td>
+      <td>14.0</td>
+      <td>208.5</td>
+      <td>14.89</td>
+      <td>17.42</td>
+      <td>-2.52</td>
+      <td>46.0</td>
+      <td>14.75</td>
+      <td>17.86</td>
+      <td>-3.11</td>
+    </tr><tr data-pos="TE">
+      <td>157</td>
+      <td>Terrance Ferguson</td>
+      <td>LAR</td>
+      <td>TE21</td>
+      <td>15.08</td>
+      <td>14.0</td>
+      <td>52.1</td>
+      <td>3.72</td>
+      <td>10.52</td>
+      <td>-6.80</td>
+      <td>14.0</td>
+      <td>3.72</td>
+      <td>9.90</td>
       <td>-6.18</td>
     </tr><tr data-pos="RB">
-      <td>155</td>
+      <td>158</td>
       <td>Tyrone Tracy Jr.</td>
-      <td>RB56</td>
-      <td>15.08</td>
+      <td>NYG</td>
+      <td>RB55</td>
+      <td>15.09</td>
       <td>15.0</td>
       <td>160.8</td>
       <td>10.72</td>
@@ -2762,277 +3036,147 @@ None
       <td>10.72</td>
       <td>12.38</td>
       <td>-1.66</td>
-    </tr><tr data-pos="TE">
-      <td>156</td>
-      <td>T.J. Hockenson</td>
-      <td>TE21</td>
+    </tr><tr data-pos="RB" style="color: firebrick;">
+      <td>159</td>
+      <td>Emmett Johnson</td>
+      <td>KC</td>
+      <td>RB56</td>
       <td>15.10</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr><tr data-pos="RB">
+      <td>160</td>
+      <td>Braelon Allen</td>
+      <td>NYJ</td>
+      <td>RB57</td>
+      <td>15.12</td>
+      <td>4.0</td>
+      <td>15.3</td>
+      <td>3.82</td>
+      <td>12.13</td>
+      <td>-8.30</td>
+      <td>21.0</td>
+      <td>4.70</td>
+      <td>12.38</td>
+      <td>-7.68</td>
+    </tr><tr data-pos="WR">
+      <td>161</td>
+      <td>Ryan Flournoy</td>
+      <td>DAL</td>
+      <td>WR62</td>
+      <td>16.01</td>
+      <td>16.0</td>
+      <td>114.0</td>
+      <td>7.12</td>
+      <td>12.18</td>
+      <td>-5.05</td>
+      <td>27.0</td>
+      <td>5.41</td>
+      <td>12.85</td>
+      <td>-7.44</td>
+    </tr><tr data-pos="RB">
+      <td>162</td>
+      <td>Ray Davis</td>
+      <td>BUF</td>
+      <td>RB58</td>
+      <td>16.02</td>
+      <td>17.0</td>
+      <td>64.1</td>
+      <td>3.77</td>
+      <td>12.13</td>
+      <td>-8.36</td>
+      <td>34.0</td>
+      <td>4.99</td>
+      <td>12.38</td>
+      <td>-7.39</td>
+    </tr><tr data-pos="TE">
+      <td>163</td>
+      <td>T.J. Hockenson</td>
+      <td>MIN</td>
+      <td>TE22</td>
+      <td>16.04</td>
       <td>15.0</td>
       <td>112.8</td>
       <td>7.52</td>
       <td>10.52</td>
       <td>-3.00</td>
       <td>40.0</td>
-      <td>10.46</td>
-      <td>10.06</td>
-      <td>0.40</td>
-    </tr><tr data-pos="QB">
-      <td>157</td>
-      <td>C.J. Stroud</td>
-      <td>QB23</td>
-      <td>15.12</td>
-      <td>14.0</td>
-      <td>208.5</td>
-      <td>14.89</td>
-      <td>17.42</td>
-      <td>-2.52</td>
-      <td>46.0</td>
-      <td>15.32</td>
-      <td>17.53</td>
-      <td>-2.21</td>
+      <td>9.13</td>
+      <td>9.90</td>
+      <td>-0.77</td>
     </tr><tr data-pos="WR">
-      <td>158</td>
-      <td>Jalen Nailor</td>
-      <td>WR62</td>
-      <td>16.01</td>
-      <td>17.0</td>
-      <td>100.7</td>
-      <td>5.92</td>
-      <td>12.18</td>
-      <td>-6.25</td>
-      <td>40.0</td>
-      <td>5.24</td>
-      <td>13.44</td>
-      <td>-8.20</td>
-    </tr><tr data-pos="WR">
-      <td>159</td>
-      <td>Kayshon Boutte</td>
-      <td>WR63</td>
-      <td>16.02</td>
-      <td>14.0</td>
-      <td>124.1</td>
-      <td>8.86</td>
-      <td>12.18</td>
-      <td>-3.31</td>
-      <td>34.0</td>
-      <td>7.35</td>
-      <td>13.44</td>
-      <td>-6.09</td>
-    </tr><tr data-pos="TE">
-      <td>160</td>
-      <td>Terrance Ferguson</td>
-      <td>TE22</td>
-      <td>16.03</td>
-      <td>14.0</td>
-      <td>52.1</td>
-      <td>3.72</td>
-      <td>10.52</td>
-      <td>-6.80</td>
-      <td>14.0</td>
-      <td>3.72</td>
-      <td>10.06</td>
-      <td>-6.34</td>
-    </tr><tr data-pos="QB">
-      <td>161</td>
-      <td>Daniel Jones</td>
-      <td>QB24</td>
-      <td>16.04</td>
-      <td>13.0</td>
-      <td>226.4</td>
-      <td>17.42</td>
-      <td>17.42</td>
-      <td>0.00</td>
-      <td>29.0</td>
-      <td>14.44</td>
-      <td>17.53</td>
-      <td>-3.09</td>
-    </tr><tr data-pos="WR">
-      <td>162</td>
-      <td>Jerry Jeudy</td>
-      <td>WR64</td>
-      <td>16.06</td>
-      <td>17.0</td>
-      <td>120.7</td>
-      <td>7.10</td>
-      <td>12.18</td>
-      <td>-5.07</td>
-      <td>50.0</td>
-      <td>10.07</td>
-      <td>13.44</td>
-      <td>-3.37</td>
-    </tr><tr data-pos="WR" style="color: firebrick;">
-      <td>163</td>
-      <td>Omar Cooper Jr.</td>
-      <td>WR65</td>
-      <td>16.07</td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-    </tr><tr data-pos="TE">
       <td>164</td>
-      <td>AJ Barner</td>
-      <td>TE23</td>
-      <td>16.09</td>
-      <td>17.0</td>
-      <td>147.3</td>
-      <td>8.66</td>
-      <td>10.52</td>
-      <td>-1.85</td>
-      <td>34.0</td>
-      <td>6.64</td>
-      <td>10.06</td>
-      <td>-3.42</td>
-    </tr><tr data-pos="RB" style="color: firebrick;">
+      <td>Jauan Jennings</td>
+      <td>MIN</td>
+      <td>WR63</td>
+      <td>16.07</td>
+      <td>15.0</td>
+      <td>173.3</td>
+      <td>11.55</td>
+      <td>12.18</td>
+      <td>-0.62</td>
+      <td>43.0</td>
+      <td>11.28</td>
+      <td>12.85</td>
+      <td>-1.57</td>
+    </tr><tr data-pos="WR">
       <td>165</td>
-      <td>Emmett Johnson</td>
-      <td>RB59</td>
-      <td>16.10</td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-    </tr><tr data-pos="WR">
-      <td>166</td>
-      <td>Dontayvion Wicks</td>
-      <td>WR66</td>
-      <td>16.11</td>
-      <td>14.0</td>
-      <td>75.8</td>
-      <td>5.41</td>
-      <td>12.18</td>
-      <td>-6.76</td>
-      <td>46.0</td>
-      <td>6.65</td>
-      <td>13.44</td>
-      <td>-6.78</td>
-    </tr><tr data-pos="WR" style="color: firebrick;">
-      <td>167</td>
-      <td>Cyrus Allen</td>
-      <td>WR67</td>
-      <td>16.12</td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-    </tr><tr data-pos="WR">
-      <td>168</td>
-      <td>Jalen McMillan</td>
-      <td>WR68</td>
-      <td>17.01</td>
-      <td>4.0</td>
-      <td>29.9</td>
-      <td>7.48</td>
-      <td>12.18</td>
-      <td>-4.70</td>
-      <td>17.0</td>
-      <td>9.72</td>
-      <td>13.44</td>
-      <td>-3.71</td>
-    </tr><tr data-pos="WR">
-      <td>169</td>
       <td>Adonai Mitchell</td>
-      <td>WR69</td>
-      <td>17.03</td>
+      <td>NYJ</td>
+      <td>WR64</td>
+      <td>16.08</td>
       <td>16.0</td>
       <td>87.9</td>
       <td>5.49</td>
       <td>12.18</td>
       <td>-6.68</td>
       <td>33.0</td>
-      <td>4.29</td>
-      <td>13.44</td>
-      <td>-9.14</td>
+      <td>4.53</td>
+      <td>12.85</td>
+      <td>-8.32</td>
     </tr><tr data-pos="WR">
-      <td>170</td>
-      <td>Travis Hunter</td>
-      <td>WR70</td>
-      <td>17.04</td>
-      <td>7.0</td>
-      <td>63.8</td>
-      <td>9.11</td>
+      <td>166</td>
+      <td>Jalen McMillan</td>
+      <td>TB</td>
+      <td>WR65</td>
+      <td>16.09</td>
+      <td>4.0</td>
+      <td>29.9</td>
+      <td>7.48</td>
       <td>12.18</td>
-      <td>-3.06</td>
-      <td>7.0</td>
-      <td>9.11</td>
-      <td>13.44</td>
-      <td>-4.32</td>
-    </tr><tr data-pos="TE" style="color: firebrick;">
-      <td>171</td>
-      <td>Kenyon Sadiq</td>
-      <td>TE24</td>
-      <td>17.05</td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-    </tr><tr data-pos="TE">
-      <td>172</td>
-      <td>Oronde Gadsden II</td>
-      <td>TE25</td>
-      <td>17.07</td>
-      <td>15.0</td>
-      <td>131.4</td>
-      <td>8.76</td>
-      <td>10.52</td>
-      <td>-1.76</td>
-      <td>15.0</td>
-      <td>8.76</td>
-      <td>10.06</td>
-      <td>-1.30</td>
-    </tr><tr data-pos="TE">
-      <td>173</td>
-      <td>Greg Dulcich</td>
-      <td>TE26</td>
-      <td>17.08</td>
-      <td>10.0</td>
-      <td>62.8</td>
-      <td>6.28</td>
-      <td>10.52</td>
-      <td>-4.24</td>
-      <td>21.0</td>
-      <td>3.62</td>
-      <td>10.06</td>
-      <td>-6.44</td>
-    </tr><tr data-pos="QB">
-      <td>174</td>
-      <td>Bryce Young</td>
-      <td>QB25</td>
-      <td>17.12</td>
-      <td>16.0</td>
-      <td>218.0</td>
-      <td>13.62</td>
-      <td>17.42</td>
-      <td>-3.79</td>
-      <td>46.0</td>
-      <td>12.38</td>
-      <td>17.53</td>
-      <td>-5.15</td>
+      <td>-4.70</td>
+      <td>17.0</td>
+      <td>9.49</td>
+      <td>12.85</td>
+      <td>-3.36</td>
+    </tr><tr data-pos="WR">
+      <td>167</td>
+      <td>Jalen Nailor</td>
+      <td>LV</td>
+      <td>WR66</td>
+      <td>16.10</td>
+      <td>17.0</td>
+      <td>100.7</td>
+      <td>5.92</td>
+      <td>12.18</td>
+      <td>-6.25</td>
+      <td>40.0</td>
+      <td>5.65</td>
+      <td>12.85</td>
+      <td>-7.20</td>
     </tr><tr data-pos="RB">
-      <td>175</td>
+      <td>168</td>
       <td>Dylan Sampson</td>
-      <td>RB61</td>
-      <td>18.02</td>
+      <td>CLE</td>
+      <td>RB59</td>
+      <td>16.11</td>
       <td>15.0</td>
       <td>87.6</td>
       <td>5.84</td>
@@ -3042,10 +3186,206 @@ None
       <td>5.84</td>
       <td>12.38</td>
       <td>-6.54</td>
+    </tr><tr data-pos="WR">
+      <td>169</td>
+      <td>Kayshon Boutte</td>
+      <td>HOU</td>
+      <td>WR67</td>
+      <td>16.12</td>
+      <td>14.0</td>
+      <td>124.1</td>
+      <td>8.86</td>
+      <td>12.18</td>
+      <td>-3.31</td>
+      <td>34.0</td>
+      <td>8.05</td>
+      <td>12.85</td>
+      <td>-4.80</td>
+    </tr><tr data-pos="WR">
+      <td>170</td>
+      <td>Dontayvion Wicks</td>
+      <td>PHI</td>
+      <td>WR68</td>
+      <td>17.01</td>
+      <td>14.0</td>
+      <td>75.8</td>
+      <td>5.41</td>
+      <td>12.18</td>
+      <td>-6.76</td>
+      <td>46.0</td>
+      <td>6.24</td>
+      <td>12.85</td>
+      <td>-6.61</td>
+    </tr><tr data-pos="WR">
+      <td>171</td>
+      <td>Pat Bryant</td>
+      <td>DEN</td>
+      <td>WR69</td>
+      <td>17.02</td>
+      <td>15.0</td>
+      <td>74.8</td>
+      <td>4.99</td>
+      <td>12.18</td>
+      <td>-7.19</td>
+      <td>15.0</td>
+      <td>4.99</td>
+      <td>12.85</td>
+      <td>-7.86</td>
     </tr><tr data-pos="WR" style="color: firebrick;">
-      <td>176</td>
-      <td>Ted Hurst III</td>
+      <td>172</td>
+      <td>Cyrus Allen</td>
+      <td>KC</td>
+      <td>WR70</td>
+      <td>17.03</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr><tr data-pos="WR" style="color: firebrick;">
+      <td>173</td>
+      <td>Caleb Douglas</td>
+      <td>MIA</td>
       <td>WR71</td>
+      <td>17.04</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr><tr data-pos="WR">
+      <td>174</td>
+      <td>Travis Hunter</td>
+      <td>JAC</td>
+      <td>WR72</td>
+      <td>17.05</td>
+      <td>7.0</td>
+      <td>63.8</td>
+      <td>9.11</td>
+      <td>12.18</td>
+      <td>-3.06</td>
+      <td>7.0</td>
+      <td>9.11</td>
+      <td>12.85</td>
+      <td>-3.74</td>
+    </tr><tr data-pos="QB">
+      <td>175</td>
+      <td>Daniel Jones</td>
+      <td>IND</td>
+      <td>QB24</td>
+      <td>17.06</td>
+      <td>13.0</td>
+      <td>226.4</td>
+      <td>17.42</td>
+      <td>17.42</td>
+      <td>0.00</td>
+      <td>29.0</td>
+      <td>15.49</td>
+      <td>17.86</td>
+      <td>-2.37</td>
+    </tr><tr data-pos="TE">
+      <td>176</td>
+      <td>Greg Dulcich</td>
+      <td>MIA</td>
+      <td>TE23</td>
+      <td>17.08</td>
+      <td>10.0</td>
+      <td>62.8</td>
+      <td>6.28</td>
+      <td>10.52</td>
+      <td>-4.24</td>
+      <td>21.0</td>
+      <td>4.19</td>
+      <td>9.90</td>
+      <td>-5.71</td>
+    </tr><tr data-pos="RB">
+      <td>177</td>
+      <td>Isiah Pacheco</td>
+      <td>DET</td>
+      <td>RB60</td>
+      <td>17.09</td>
+      <td>13.0</td>
+      <td>87.3</td>
+      <td>6.72</td>
+      <td>12.13</td>
+      <td>-5.41</td>
+      <td>34.0</td>
+      <td>8.80</td>
+      <td>12.38</td>
+      <td>-3.58</td>
+    </tr><tr data-pos="TE">
+      <td>178</td>
+      <td>AJ Barner</td>
+      <td>SEA</td>
+      <td>TE24</td>
+      <td>17.12</td>
+      <td>17.0</td>
+      <td>147.3</td>
+      <td>8.66</td>
+      <td>10.52</td>
+      <td>-1.85</td>
+      <td>34.0</td>
+      <td>7.05</td>
+      <td>9.90</td>
+      <td>-2.85</td>
+    </tr><tr data-pos="WR">
+      <td>179</td>
+      <td>Tre Harris</td>
+      <td>LAC</td>
+      <td>WR73</td>
+      <td>18.01</td>
+      <td>17.0</td>
+      <td>69.4</td>
+      <td>4.08</td>
+      <td>12.18</td>
+      <td>-8.09</td>
+      <td>17.0</td>
+      <td>4.08</td>
+      <td>12.85</td>
+      <td>-8.77</td>
+    </tr><tr data-pos="QB" style="color: firebrick;">
+      <td>180</td>
+      <td>Fernando Mendoza</td>
+      <td>LV</td>
+      <td>QB25</td>
+      <td>18.02</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr><tr data-pos="WR" style="color: firebrick;">
+      <td>181</td>
+      <td>Zachariah Branch</td>
+      <td>ATL</td>
+      <td>WR74</td>
+      <td>18.03</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr><tr data-pos="TE" style="color: firebrick;">
+      <td>182</td>
+      <td>Kenyon Sadiq</td>
+      <td>NYJ</td>
+      <td>TE25</td>
       <td>18.04</td>
       <td></td>
       <td></td>
@@ -3056,25 +3396,27 @@ None
       <td></td>
       <td></td>
       <td></td>
-    </tr><tr data-pos="WR">
-      <td>177</td>
-      <td>Tre Harris</td>
-      <td>WR72</td>
+    </tr><tr data-pos="RB">
+      <td>183</td>
+      <td>Chris Brooks</td>
+      <td>GB</td>
+      <td>RB61</td>
       <td>18.05</td>
       <td>17.0</td>
-      <td>69.4</td>
-      <td>4.08</td>
-      <td>12.18</td>
-      <td>-8.09</td>
-      <td>17.0</td>
-      <td>4.08</td>
-      <td>13.44</td>
-      <td>-9.35</td>
+      <td>32.7</td>
+      <td>1.92</td>
+      <td>12.13</td>
+      <td>-10.21</td>
+      <td>41.0</td>
+      <td>2.15</td>
+      <td>12.38</td>
+      <td>-10.23</td>
     </tr><tr data-pos="WR">
-      <td>178</td>
+      <td>184</td>
       <td>Jaylin Noel</td>
-      <td>WR73</td>
-      <td>18.07</td>
+      <td>HOU</td>
+      <td>WR75</td>
+      <td>18.06</td>
       <td>17.0</td>
       <td>68.4</td>
       <td>4.02</td>
@@ -3082,139 +3424,134 @@ None
       <td>-8.15</td>
       <td>17.0</td>
       <td>4.02</td>
-      <td>13.44</td>
-      <td>-9.41</td>
-    </tr><tr data-pos="RB">
-      <td>179</td>
-      <td>Kimani Vidal</td>
-      <td>RB62</td>
-      <td>18.09</td>
-      <td>13.0</td>
-      <td>117.9</td>
-      <td>9.07</td>
-      <td>12.13</td>
-      <td>-3.06</td>
-      <td>23.0</td>
-      <td>6.55</td>
-      <td>12.38</td>
-      <td>-5.83</td>
-    </tr><tr data-pos="RB">
-      <td>180</td>
-      <td>Justice Hill</td>
-      <td>RB63</td>
-      <td>18.10</td>
-      <td>10.0</td>
-      <td>65.2</td>
-      <td>6.52</td>
-      <td>12.13</td>
-      <td>-5.61</td>
-      <td>41.0</td>
-      <td>7.36</td>
-      <td>12.38</td>
-      <td>-5.02</td>
+      <td>12.85</td>
+      <td>-8.83</td>
     </tr><tr data-pos="WR">
-      <td>181</td>
-      <td>Pat Bryant</td>
-      <td>WR74</td>
+      <td>185</td>
+      <td>Malik Washington</td>
+      <td>MIA</td>
+      <td>WR76</td>
+      <td>18.09</td>
+      <td>17.0</td>
+      <td>116.7</td>
+      <td>6.86</td>
+      <td>12.18</td>
+      <td>-5.31</td>
+      <td>31.0</td>
+      <td>5.82</td>
+      <td>12.85</td>
+      <td>-7.03</td>
+    </tr><tr data-pos="WR">
+      <td>186</td>
+      <td>Jerry Jeudy</td>
+      <td>CLE</td>
+      <td>WR77</td>
+      <td>18.10</td>
+      <td>17.0</td>
+      <td>120.7</td>
+      <td>7.10</td>
+      <td>12.18</td>
+      <td>-5.07</td>
+      <td>50.0</td>
+      <td>9.76</td>
+      <td>12.85</td>
+      <td>-3.09</td>
+    </tr><tr data-pos="TE">
+      <td>187</td>
+      <td>Oronde Gadsden II</td>
+      <td>LAC</td>
+      <td>TE26</td>
       <td>18.11</td>
       <td>15.0</td>
-      <td>74.8</td>
-      <td>4.99</td>
-      <td>12.18</td>
-      <td>-7.19</td>
-      <td>15.0</td>
-      <td>4.99</td>
-      <td>13.44</td>
-      <td>-8.45</td>
-    </tr><tr data-pos="TE">
-      <td>182</td>
-      <td>Gunnar Helm</td>
-      <td>TE27</td>
-      <td>19.01</td>
-      <td>16.0</td>
-      <td>91.7</td>
-      <td>5.73</td>
+      <td>131.4</td>
+      <td>8.76</td>
       <td>10.52</td>
-      <td>-4.79</td>
+      <td>-1.76</td>
+      <td>15.0</td>
+      <td>8.76</td>
+      <td>9.90</td>
+      <td>-1.14</td>
+    </tr><tr data-pos="QB">
+      <td>188</td>
+      <td>Aaron Rodgers</td>
+      <td>PIT</td>
+      <td>QB26</td>
+      <td>18.12</td>
       <td>16.0</td>
-      <td>5.73</td>
-      <td>10.06</td>
-      <td>-4.33</td>
-    </tr><tr data-pos="WR" style="color: firebrick;">
-      <td>183</td>
-      <td>Chris Bell</td>
-      <td>WR75</td>
-      <td>19.02</td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
+      <td>227.1</td>
+      <td>14.19</td>
+      <td>17.42</td>
+      <td>-3.22</td>
+      <td>33.0</td>
+      <td>14.57</td>
+      <td>17.86</td>
+      <td>-3.29</td>
     </tr><tr data-pos="WR">
-      <td>184</td>
+      <td>189</td>
       <td>Cooper Kupp</td>
-      <td>WR76</td>
-      <td>19.04</td>
+      <td>SEA</td>
+      <td>WR78</td>
+      <td>19.01</td>
       <td>16.0</td>
       <td>116.3</td>
       <td>7.27</td>
       <td>12.18</td>
       <td>-4.91</td>
       <td>40.0</td>
-      <td>11.39</td>
-      <td>13.44</td>
-      <td>-2.04</td>
-    </tr><tr data-pos="WR" style="color: firebrick;">
-      <td>185</td>
-      <td>Zachariah Branch</td>
-      <td>WR77</td>
-      <td>19.05</td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
+      <td>10.28</td>
+      <td>12.85</td>
+      <td>-2.57</td>
     </tr><tr data-pos="RB">
-      <td>186</td>
-      <td>Malik Davis</td>
+      <td>190</td>
+      <td>Kimani Vidal</td>
+      <td>LAC</td>
+      <td>RB62</td>
+      <td>19.03</td>
+      <td>13.0</td>
+      <td>117.9</td>
+      <td>9.07</td>
+      <td>12.13</td>
+      <td>-3.06</td>
+      <td>23.0</td>
+      <td>7.10</td>
+      <td>12.38</td>
+      <td>-5.28</td>
+    </tr><tr data-pos="RB">
+      <td>191</td>
+      <td>Kaleb Johnson</td>
+      <td>GB</td>
+      <td>RB63</td>
+      <td>19.04</td>
+      <td>10.0</td>
+      <td>8.8</td>
+      <td>0.88</td>
+      <td>12.13</td>
+      <td>-11.25</td>
+      <td>10.0</td>
+      <td>0.88</td>
+      <td>12.38</td>
+      <td>-11.50</td>
+    </tr><tr data-pos="RB">
+      <td>192</td>
+      <td>Kendre Miller</td>
+      <td>NO</td>
       <td>RB64</td>
       <td>19.07</td>
-      <td>10.0</td>
-      <td>40.6</td>
-      <td>4.06</td>
+      <td>7.0</td>
+      <td>33.3</td>
+      <td>4.76</td>
       <td>12.13</td>
-      <td>-8.07</td>
-      <td>10.0</td>
-      <td>4.06</td>
+      <td>-7.37</td>
+      <td>21.0</td>
+      <td>4.91</td>
       <td>12.38</td>
-      <td>-8.32</td>
-    </tr><tr data-pos="QB">
-      <td>187</td>
-      <td>Cam Ward</td>
-      <td>QB26</td>
-      <td>19.08</td>
-      <td>17.0</td>
-      <td>186.7</td>
-      <td>10.98</td>
-      <td>17.42</td>
-      <td>-6.43</td>
-      <td>17.0</td>
-      <td>10.98</td>
-      <td>17.53</td>
-      <td>-6.55</td>
+      <td>-7.47</td>
     </tr><tr data-pos="WR" style="color: firebrick;">
-      <td>188</td>
+      <td>193</td>
       <td>Malachi Fields</td>
-      <td>WR78</td>
-      <td>19.09</td>
+      <td>NYG</td>
+      <td>WR80</td>
+      <td>19.08</td>
       <td></td>
       <td></td>
       <td></td>
@@ -3224,122 +3561,116 @@ None
       <td></td>
       <td></td>
       <td></td>
-    </tr><tr data-pos="TE">
-      <td>189</td>
-      <td>Colby Parkinson</td>
-      <td>TE28</td>
+    </tr><tr data-pos="RB" style="color: firebrick;">
+      <td>194</td>
+      <td>Seth McGowan</td>
+      <td>IND</td>
+      <td>RB65</td>
       <td>19.10</td>
-      <td>15.0</td>
-      <td>129.8</td>
-      <td>8.65</td>
-      <td>10.52</td>
-      <td>-1.86</td>
-      <td>49.0</td>
-      <td>5.24</td>
-      <td>10.06</td>
-      <td>-4.82</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
     </tr><tr data-pos="QB">
-      <td>190</td>
-      <td>Jacoby Brissett</td>
+      <td>195</td>
+      <td>Bryce Young</td>
+      <td>CAR</td>
       <td>QB27</td>
-      <td>19.11</td>
+      <td>19.12</td>
+      <td>16.0</td>
+      <td>218.0</td>
+      <td>13.62</td>
+      <td>17.42</td>
+      <td>-3.79</td>
+      <td>46.0</td>
+      <td>13.05</td>
+      <td>17.86</td>
+      <td>-4.81</td>
+    </tr><tr data-pos="QB">
+      <td>196</td>
+      <td>Jacoby Brissett</td>
+      <td>ARI</td>
+      <td>QB28</td>
+      <td>20.01</td>
       <td>14.0</td>
       <td>227.4</td>
       <td>16.24</td>
       <td>17.42</td>
       <td>-1.17</td>
       <td>25.0</td>
-      <td>11.82</td>
-      <td>17.53</td>
-      <td>-5.71</td>
-    </tr><tr data-pos="WR">
-      <td>191</td>
-      <td>Ryan Flournoy</td>
-      <td>WR80</td>
-      <td>20.02</td>
-      <td>16.0</td>
-      <td>114.0</td>
-      <td>7.12</td>
-      <td>12.18</td>
-      <td>-5.05</td>
-      <td>27.0</td>
-      <td>4.90</td>
-      <td>13.44</td>
-      <td>-8.54</td>
-    </tr><tr data-pos="TE">
-      <td>192</td>
-      <td>David Njoku</td>
-      <td>TE29</td>
+      <td>13.04</td>
+      <td>17.86</td>
+      <td>-4.82</td>
+    </tr><tr data-pos="RB">
+      <td>197</td>
+      <td>Najee Harris</td>
+      <td>NYG</td>
+      <td>RB66</td>
       <td>20.03</td>
-      <td>12.0</td>
-      <td>86.3</td>
-      <td>7.19</td>
-      <td>10.52</td>
-      <td>-3.33</td>
-      <td>39.0</td>
-      <td>11.18</td>
-      <td>10.06</td>
-      <td>1.12</td>
-    </tr><tr data-pos="TE">
-      <td>193</td>
-      <td>Cade Otton</td>
-      <td>TE30</td>
+      <td>3.0</td>
+      <td>11.6</td>
+      <td>3.87</td>
+      <td>12.13</td>
+      <td>-8.26</td>
+      <td>37.0</td>
+      <td>10.66</td>
+      <td>12.38</td>
+      <td>-1.72</td>
+    </tr><tr data-pos="WR">
+      <td>198</td>
+      <td>Jack Bech</td>
+      <td>LV</td>
+      <td>WR81</td>
       <td>20.04</td>
       <td>16.0</td>
-      <td>122.2</td>
-      <td>7.64</td>
-      <td>10.52</td>
-      <td>-2.88</td>
-      <td>47.0</td>
-      <td>8.07</td>
-      <td>10.06</td>
-      <td>-1.99</td>
-    </tr><tr data-pos="WR">
-      <td>194</td>
-      <td>Jayden Higgins</td>
-      <td>WR81</td>
-      <td>20.07</td>
-      <td>17.0</td>
-      <td>129.5</td>
-      <td>7.62</td>
+      <td>42.4</td>
+      <td>2.65</td>
       <td>12.18</td>
-      <td>-4.56</td>
-      <td>17.0</td>
-      <td>7.62</td>
-      <td>13.44</td>
-      <td>-5.82</td>
-    </tr><tr data-pos="QB">
-      <td>195</td>
-      <td>Geno Smith</td>
-      <td>QB28</td>
-      <td>20.08</td>
-      <td>15.0</td>
-      <td>173.9</td>
-      <td>11.59</td>
-      <td>17.42</td>
-      <td>-5.82</td>
-      <td>47.0</td>
-      <td>14.20</td>
-      <td>17.53</td>
-      <td>-3.34</td>
+      <td>-9.52</td>
+      <td>16.0</td>
+      <td>2.65</td>
+      <td>12.85</td>
+      <td>-10.20</td>
     </tr><tr data-pos="WR">
-      <td>196</td>
-      <td>Calvin Ridley</td>
+      <td>199</td>
+      <td>Rashod Bateman</td>
+      <td>BAL</td>
       <td>WR82</td>
-      <td>20.09</td>
-      <td>7.0</td>
-      <td>47.3</td>
-      <td>6.76</td>
+      <td>20.05</td>
+      <td>13.0</td>
+      <td>55.4</td>
+      <td>4.26</td>
       <td>12.18</td>
-      <td>-5.42</td>
-      <td>41.0</td>
-      <td>11.62</td>
-      <td>13.44</td>
-      <td>-1.82</td>
+      <td>-7.91</td>
+      <td>46.0</td>
+      <td>6.65</td>
+      <td>12.85</td>
+      <td>-6.20</td>
     </tr><tr data-pos="RB" style="color: firebrick;">
-      <td>197</td>
-      <td>Demond Claiborne</td>
-      <td>RB65</td>
+      <td>200</td>
+      <td>Kaytron Allen</td>
+      <td>WAS</td>
+      <td>RB67</td>
+      <td>20.08</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr><tr data-pos="WR" style="color: firebrick;">
+      <td>201</td>
+      <td>Omar Cooper Jr.</td>
+      <td>NYJ</td>
+      <td>WR84</td>
       <td>20.10</td>
       <td></td>
       <td></td>
@@ -3350,347 +3681,102 @@ None
       <td></td>
       <td></td>
       <td></td>
-    </tr><tr data-pos="WR" style="color: firebrick;">
-      <td>198</td>
-      <td>Antonio Williams</td>
-      <td>WR84</td>
-      <td>20.12</td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-    </tr><tr data-pos="WR">
-      <td>199</td>
-      <td>Keon Coleman</td>
-      <td>WR85</td>
-      <td>21.01</td>
-      <td>13.0</td>
-      <td>102.4</td>
-      <td>7.88</td>
-      <td>12.18</td>
-      <td>-4.30</td>
-      <td>26.0</td>
-      <td>8.23</td>
-      <td>13.44</td>
-      <td>-5.21</td>
-    </tr><tr data-pos="RB" style="color: firebrick;">
-      <td>200</td>
-      <td>Nicholas Singleton</td>
-      <td>RB66</td>
-      <td>21.02</td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-    </tr><tr data-pos="WR">
-      <td>201</td>
-      <td>Jauan Jennings</td>
-      <td>WR86</td>
-      <td>21.03</td>
-      <td>15.0</td>
-      <td>173.3</td>
-      <td>11.55</td>
-      <td>12.18</td>
-      <td>-0.62</td>
-      <td>43.0</td>
-      <td>10.12</td>
-      <td>13.44</td>
-      <td>-3.31</td>
     </tr><tr data-pos="QB">
       <td>202</td>
-      <td>Aaron Rodgers</td>
+      <td>Cam Ward</td>
+      <td>TEN</td>
       <td>QB29</td>
-      <td>21.04</td>
-      <td>16.0</td>
-      <td>227.1</td>
-      <td>14.19</td>
+      <td>20.11</td>
+      <td>17.0</td>
+      <td>186.7</td>
+      <td>10.98</td>
       <td>17.42</td>
-      <td>-3.22</td>
-      <td>33.0</td>
-      <td>14.66</td>
-      <td>17.53</td>
-      <td>-2.88</td>
-    </tr><tr data-pos="QB" style="color: firebrick;">
+      <td>-6.43</td>
+      <td>17.0</td>
+      <td>10.98</td>
+      <td>17.86</td>
+      <td>-6.87</td>
+    </tr><tr data-pos="TE">
       <td>203</td>
-      <td>Fernando Mendoza</td>
-      <td>QB30</td>
-      <td>21.05</td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-    </tr><tr data-pos="RB">
-      <td>204</td>
-      <td>James Conner</td>
-      <td>RB67</td>
-      <td>21.06</td>
-      <td>3.0</td>
-      <td>33.3</td>
-      <td>11.10</td>
-      <td>12.13</td>
-      <td>-1.03</td>
-      <td>32.0</td>
-      <td>15.27</td>
-      <td>12.38</td>
-      <td>2.89</td>
-    </tr><tr data-pos="WR">
-      <td>205</td>
-      <td>Rashod Bateman</td>
-      <td>WR87</td>
-      <td>21.07</td>
-      <td>13.0</td>
-      <td>55.4</td>
-      <td>4.26</td>
-      <td>12.18</td>
-      <td>-7.91</td>
-      <td>46.0</td>
-      <td>6.66</td>
-      <td>13.44</td>
-      <td>-6.77</td>
-    </tr><tr data-pos="RB" style="color: firebrick;">
-      <td>206</td>
-      <td>Jordan James</td>
-      <td>RB68</td>
-      <td>21.08</td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-    </tr><tr data-pos="WR" style="color: firebrick;">
-      <td>207</td>
-      <td>Germie Bernard</td>
-      <td>WR89</td>
-      <td>21.10</td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-    </tr><tr data-pos="RB" style="color: firebrick;">
-      <td>208</td>
-      <td>Kaytron Allen</td>
-      <td>RB69</td>
-      <td>21.12</td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-    </tr><tr data-pos="WR">
-      <td>209</td>
-      <td>Malik Washington</td>
-      <td>WR90</td>
-      <td>22.01</td>
-      <td>17.0</td>
-      <td>116.7</td>
-      <td>6.86</td>
-      <td>12.18</td>
-      <td>-5.31</td>
-      <td>31.0</td>
-      <td>5.53</td>
-      <td>13.44</td>
-      <td>-7.90</td>
-    </tr><tr data-pos="TE">
-      <td>210</td>
-      <td>Pat Freiermuth</td>
-      <td>TE31</td>
-      <td>22.04</td>
-      <td>17.0</td>
-      <td>113.6</td>
-      <td>6.68</td>
-      <td>10.52</td>
-      <td>-3.84</td>
-      <td>46.0</td>
-      <td>7.80</td>
-      <td>10.06</td>
-      <td>-2.26</td>
-    </tr><tr data-pos="WR">
-      <td>211</td>
-      <td>Tyreek Hill</td>
-      <td>WR91</td>
-      <td>22.05</td>
-      <td>4.0</td>
-      <td>53.5</td>
-      <td>13.38</td>
-      <td>12.18</td>
-      <td>1.20</td>
-      <td>37.0</td>
-      <td>17.52</td>
-      <td>13.44</td>
-      <td>4.08</td>
-    </tr><tr data-pos="WR" style="color: firebrick;">
-      <td>212</td>
-      <td>Caleb Douglas</td>
-      <td>WR92</td>
-      <td>22.06</td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-    </tr><tr data-pos="WR">
-      <td>213</td>
-      <td>Devaughn Vele</td>
-      <td>WR93</td>
-      <td>22.08</td>
-      <td>13.0</td>
-      <td>66.3</td>
-      <td>5.10</td>
-      <td>12.18</td>
-      <td>-7.07</td>
-      <td>26.0</td>
-      <td>6.65</td>
-      <td>13.44</td>
-      <td>-6.79</td>
-    </tr><tr data-pos="WR">
-      <td>214</td>
-      <td>Isaac TeSlaa</td>
-      <td>WR94</td>
-      <td>22.09</td>
-      <td>17.0</td>
-      <td>75.9</td>
-      <td>4.46</td>
-      <td>12.18</td>
-      <td>-7.71</td>
-      <td>17.0</td>
-      <td>4.46</td>
-      <td>13.44</td>
-      <td>-8.97</td>
-    </tr><tr data-pos="WR">
-      <td>215</td>
-      <td>Chimere Dike</td>
-      <td>WR95</td>
-      <td>22.10</td>
-      <td>17.0</td>
-      <td>126.1</td>
-      <td>7.42</td>
-      <td>12.18</td>
-      <td>-4.76</td>
-      <td>17.0</td>
-      <td>7.42</td>
-      <td>13.44</td>
-      <td>-6.02</td>
-    </tr><tr data-pos="TE">
-      <td>216</td>
       <td>Darren Waller</td>
-      <td>TE32</td>
-      <td>22.12</td>
+      <td>CAR</td>
+      <td>TE27</td>
+      <td>20.12</td>
       <td>9.0</td>
       <td>88.7</td>
       <td>9.86</td>
       <td>10.52</td>
       <td>-0.66</td>
       <td>21.0</td>
-      <td>9.61</td>
-      <td>10.06</td>
-      <td>-0.45</td>
+      <td>9.73</td>
+      <td>9.90</td>
+      <td>-0.17</td>
     </tr><tr data-pos="RB">
-      <td>217</td>
-      <td>Samaje Perine</td>
-      <td>RB70</td>
-      <td>23.01</td>
-      <td>15.0</td>
-      <td>77.9</td>
-      <td>5.19</td>
-      <td>12.13</td>
-      <td>-6.94</td>
-      <td>49.0</td>
-      <td>5.73</td>
-      <td>12.38</td>
-      <td>-6.65</td>
-    </tr><tr data-pos="RB">
-      <td>218</td>
-      <td>Kendre Miller</td>
-      <td>RB72</td>
-      <td>23.05</td>
-      <td>7.0</td>
-      <td>33.3</td>
-      <td>4.76</td>
-      <td>12.13</td>
-      <td>-7.37</td>
-      <td>21.0</td>
-      <td>5.03</td>
-      <td>12.38</td>
-      <td>-7.35</td>
-    </tr><tr data-pos="RB">
-      <td>219</td>
-      <td>Jaylen Wright</td>
-      <td>RB74</td>
-      <td>23.07</td>
-      <td>10.0</td>
-      <td>48.2</td>
-      <td>4.82</td>
-      <td>12.13</td>
-      <td>-7.31</td>
-      <td>25.0</td>
-      <td>3.00</td>
-      <td>12.38</td>
-      <td>-9.38</td>
-    </tr><tr data-pos="RB" style="color: firebrick;">
-      <td>220</td>
-      <td>Seth McGowan</td>
-      <td>RB75</td>
-      <td>23.08</td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-    </tr><tr data-pos="RB">
-      <td>221</td>
+      <td>204</td>
       <td>Sean Tucker</td>
-      <td>RB76</td>
-      <td>23.09</td>
+      <td>TB</td>
+      <td>RB68</td>
+      <td>21.02</td>
       <td>17.0</td>
       <td>91.4</td>
       <td>5.38</td>
       <td>12.13</td>
       <td>-6.75</td>
       <td>45.0</td>
-      <td>3.67</td>
+      <td>4.34</td>
       <td>12.38</td>
-      <td>-8.71</td>
+      <td>-8.04</td>
     </tr><tr data-pos="RB">
-      <td>222</td>
+      <td>205</td>
+      <td>Jaylen Wright</td>
+      <td>MIA</td>
+      <td>RB69</td>
+      <td>21.03</td>
+      <td>10.0</td>
+      <td>48.2</td>
+      <td>4.82</td>
+      <td>12.13</td>
+      <td>-7.31</td>
+      <td>25.0</td>
+      <td>3.30</td>
+      <td>12.38</td>
+      <td>-9.08</td>
+    </tr><tr data-pos="WR">
+      <td>206</td>
+      <td>Devaughn Vele</td>
+      <td>NO</td>
+      <td>WR85</td>
+      <td>21.05</td>
+      <td>13.0</td>
+      <td>66.3</td>
+      <td>5.10</td>
+      <td>12.18</td>
+      <td>-7.07</td>
+      <td>26.0</td>
+      <td>6.34</td>
+      <td>12.85</td>
+      <td>-6.51</td>
+    </tr><tr data-pos="RB" style="color: firebrick;">
+      <td>207</td>
+      <td>Demond Claiborne</td>
+      <td>MIN</td>
+      <td>RB70</td>
+      <td>21.06</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr><tr data-pos="RB">
+      <td>208</td>
       <td>Jaydon Blue</td>
-      <td>RB77</td>
-      <td>23.10</td>
+      <td>PHI</td>
+      <td>RB71</td>
+      <td>21.07</td>
       <td>5.0</td>
       <td>20.4</td>
       <td>4.08</td>
@@ -3701,1517 +3787,350 @@ None
       <td>12.38</td>
       <td>-8.30</td>
     </tr><tr data-pos="RB">
-      <td>223</td>
-      <td>Kenneth Gainwell</td>
-      <td>RB</td>
-      <td></td>
-      <td>17.0</td>
-      <td>221.3</td>
-      <td>13.02</td>
-      <td>12.13</td>
-      <td>0.89</td>
-      <td>50.0</td>
-      <td>7.63</td>
-      <td>12.38</td>
-      <td>-4.75</td>
-    </tr><tr data-pos="TE">
-      <td>224</td>
-      <td>Zach Ertz</td>
-      <td>TE</td>
-      <td></td>
-      <td>13.0</td>
-      <td>126.4</td>
-      <td>9.72</td>
-      <td>10.52</td>
-      <td>-0.79</td>
-      <td>37.0</td>
-      <td>9.61</td>
-      <td>10.06</td>
-      <td>-0.45</td>
-    </tr><tr data-pos="RB">
-      <td>225</td>
-      <td>Phil Mafah</td>
-      <td>RB</td>
-      <td></td>
-      <td>1.0</td>
-      <td>10.9</td>
-      <td>10.90</td>
-      <td>12.13</td>
-      <td>-1.23</td>
-      <td>1.0</td>
-      <td>10.90</td>
-      <td>12.38</td>
-      <td>-1.48</td>
-    </tr><tr data-pos="QB">
-      <td>226</td>
-      <td>Justin Fields</td>
-      <td>QB</td>
-      <td></td>
-      <td>9.0</td>
-      <td>142.7</td>
-      <td>15.86</td>
-      <td>17.42</td>
-      <td>-1.56</td>
-      <td>32.0</td>
-      <td>15.38</td>
-      <td>17.53</td>
-      <td>-2.16</td>
-    </tr><tr data-pos="WR">
-      <td>227</td>
-      <td>Troy Franklin</td>
-      <td>WR</td>
-      <td></td>
-      <td>17.0</td>
-      <td>177.1</td>
-      <td>10.42</td>
-      <td>12.18</td>
-      <td>-1.76</td>
-      <td>33.0</td>
-      <td>7.40</td>
-      <td>13.44</td>
-      <td>-6.04</td>
-    </tr><tr data-pos="TE">
-      <td>228</td>
-      <td>Albert Okwuegbunam</td>
-      <td>TE</td>
-      <td></td>
-      <td>1.0</td>
-      <td>8.6</td>
-      <td>8.60</td>
-      <td>10.52</td>
-      <td>-1.92</td>
-      <td>1.0</td>
-      <td>8.60</td>
-      <td>10.06</td>
-      <td>-1.46</td>
-    </tr><tr data-pos="TE">
-      <td>229</td>
-      <td>Theo Johnson</td>
-      <td>TE</td>
-      <td></td>
-      <td>15.0</td>
-      <td>127.8</td>
-      <td>8.52</td>
-      <td>10.52</td>
-      <td>-2.00</td>
-      <td>27.0</td>
-      <td>7.26</td>
-      <td>10.06</td>
-      <td>-2.81</td>
-    </tr><tr data-pos="WR">
-      <td>230</td>
-      <td>Ricky Pearsall</td>
-      <td>WR</td>
-      <td></td>
-      <td>9.0</td>
-      <td>88.6</td>
-      <td>9.84</td>
-      <td>12.18</td>
-      <td>-2.33</td>
-      <td>20.0</td>
-      <td>9.10</td>
-      <td>13.44</td>
-      <td>-4.33</td>
-    </tr><tr data-pos="QB">
-      <td>231</td>
-      <td>Jameis Winston</td>
-      <td>QB</td>
-      <td></td>
-      <td>3.0</td>
-      <td>43.3</td>
-      <td>14.43</td>
-      <td>17.42</td>
-      <td>-2.98</td>
-      <td>22.0</td>
-      <td>8.47</td>
-      <td>17.53</td>
-      <td>-9.06</td>
-    </tr><tr data-pos="RB">
-      <td>232</td>
-      <td>Trey Benson</td>
-      <td>RB</td>
-      <td></td>
-      <td>4.0</td>
-      <td>35.4</td>
-      <td>8.85</td>
-      <td>12.13</td>
-      <td>-3.28</td>
-      <td>17.0</td>
-      <td>4.85</td>
-      <td>12.38</td>
-      <td>-7.53</td>
-    </tr><tr data-pos="QB">
-      <td>233</td>
-      <td>Carson Wentz</td>
-      <td>QB</td>
-      <td></td>
-      <td>5.0</td>
-      <td>70.3</td>
-      <td>14.06</td>
-      <td>17.42</td>
-      <td>-3.36</td>
+      <td>209</td>
+      <td>Malik Davis</td>
+      <td>DAL</td>
+      <td>RB72</td>
+      <td>21.09</td>
       <td>10.0</td>
-      <td>10.11</td>
-      <td>17.53</td>
-      <td>-7.42</td>
-    </tr><tr data-pos="TE">
-      <td>234</td>
-      <td>Tyler Higbee</td>
-      <td>TE</td>
-      <td></td>
-      <td>10.0</td>
-      <td>71.1</td>
-      <td>7.11</td>
-      <td>10.52</td>
-      <td>-3.41</td>
-      <td>28.0</td>
-      <td>7.36</td>
-      <td>10.06</td>
-      <td>-2.70</td>
-    </tr><tr data-pos="WR">
-      <td>235</td>
-      <td>Theo Wease</td>
-      <td>WR</td>
-      <td></td>
-      <td>3.0</td>
-      <td>25.9</td>
-      <td>8.63</td>
-      <td>12.18</td>
-      <td>-3.54</td>
-      <td>3.0</td>
-      <td>8.63</td>
-      <td>13.44</td>
-      <td>-4.80</td>
-    </tr><tr data-pos="WR">
-      <td>236</td>
-      <td>Marquise Brown</td>
-      <td>WR</td>
-      <td></td>
-      <td>16.0</td>
-      <td>137.7</td>
-      <td>8.61</td>
-      <td>12.18</td>
-      <td>-3.57</td>
-      <td>32.0</td>
-      <td>9.08</td>
-      <td>13.44</td>
-      <td>-4.36</td>
-    </tr><tr data-pos="RB">
-      <td>237</td>
-      <td>Kareem Hunt</td>
-      <td>RB</td>
-      <td></td>
-      <td>17.0</td>
-      <td>145.4</td>
-      <td>8.55</td>
+      <td>40.6</td>
+      <td>4.06</td>
       <td>12.13</td>
-      <td>-3.58</td>
-      <td>45.0</td>
-      <td>9.32</td>
-      <td>12.38</td>
-      <td>-3.06</td>
-    </tr><tr data-pos="TE">
-      <td>238</td>
-      <td>Mason Taylor</td>
-      <td>TE</td>
-      <td></td>
-      <td>13.0</td>
-      <td>88.9</td>
-      <td>6.84</td>
-      <td>10.52</td>
-      <td>-3.68</td>
-      <td>13.0</td>
-      <td>6.84</td>
-      <td>10.06</td>
-      <td>-3.22</td>
-    </tr><tr data-pos="WR">
-      <td>239</td>
-      <td>Tory Horton</td>
-      <td>WR</td>
-      <td></td>
-      <td>8.0</td>
-      <td>65.1</td>
-      <td>8.14</td>
-      <td>12.18</td>
-      <td>-4.04</td>
-      <td>8.0</td>
-      <td>8.14</td>
-      <td>13.44</td>
-      <td>-5.30</td>
-    </tr><tr data-pos="QB">
-      <td>240</td>
-      <td>Michael Penix</td>
-      <td>QB</td>
-      <td></td>
-      <td>9.0</td>
-      <td>120.3</td>
-      <td>13.37</td>
-      <td>17.42</td>
-      <td>-4.05</td>
-      <td>14.0</td>
-      <td>11.74</td>
-      <td>17.53</td>
-      <td>-5.79</td>
-    </tr><tr data-pos="TE">
-      <td>241</td>
-      <td>Evan Engram</td>
-      <td>TE</td>
-      <td></td>
-      <td>16.0</td>
-      <td>102.8</td>
-      <td>6.42</td>
-      <td>10.52</td>
-      <td>-4.09</td>
-      <td>42.0</td>
-      <td>10.06</td>
-      <td>10.06</td>
-      <td>0.00</td>
-    </tr><tr data-pos="RB">
-      <td>242</td>
-      <td>Zonovan Knight</td>
-      <td>RB</td>
-      <td></td>
-      <td>12.0</td>
-      <td>92.9</td>
-      <td>7.74</td>
-      <td>12.13</td>
-      <td>-4.39</td>
-      <td>14.0</td>
-      <td>6.86</td>
-      <td>12.38</td>
-      <td>-5.52</td>
-    </tr><tr data-pos="TE">
-      <td>243</td>
-      <td>Dawson Knox</td>
-      <td>TE</td>
-      <td></td>
-      <td>17.0</td>
-      <td>103.7</td>
-      <td>6.10</td>
-      <td>10.52</td>
-      <td>-4.42</td>
-      <td>45.0</td>
-      <td>4.83</td>
-      <td>10.06</td>
-      <td>-5.23</td>
-    </tr><tr data-pos="RB">
-      <td>244</td>
-      <td>Michael Carter</td>
-      <td>RB</td>
-      <td></td>
-      <td>13.0</td>
-      <td>99.0</td>
-      <td>7.62</td>
-      <td>12.13</td>
-      <td>-4.51</td>
-      <td>31.0</td>
-      <td>6.25</td>
-      <td>12.38</td>
-      <td>-6.13</td>
-    </tr><tr data-pos="WR">
-      <td>245</td>
-      <td>Mack Hollins</td>
-      <td>WR</td>
-      <td></td>
-      <td>15.0</td>
-      <td>113.4</td>
-      <td>7.56</td>
-      <td>12.18</td>
-      <td>-4.61</td>
-      <td>45.0</td>
-      <td>5.67</td>
-      <td>13.44</td>
-      <td>-7.76</td>
-    </tr><tr data-pos="RB">
-      <td>246</td>
-      <td>Jawhar Jordan</td>
-      <td>RB</td>
-      <td></td>
-      <td>4.0</td>
-      <td>29.7</td>
-      <td>7.42</td>
-      <td>12.13</td>
-      <td>-4.70</td>
-      <td>4.0</td>
-      <td>7.42</td>
-      <td>12.38</td>
-      <td>-4.95</td>
-    </tr><tr data-pos="TE">
-      <td>247</td>
-      <td>Michael Mayer</td>
-      <td>TE</td>
-      <td></td>
-      <td>13.0</td>
-      <td>73.8</td>
-      <td>5.68</td>
-      <td>10.52</td>
-      <td>-4.84</td>
-      <td>38.0</td>
-      <td>4.78</td>
-      <td>10.06</td>
-      <td>-5.28</td>
-    </tr><tr data-pos="QB">
-      <td>248</td>
-      <td>J.J. McCarthy</td>
-      <td>QB</td>
-      <td></td>
-      <td>10.0</td>
-      <td>125.4</td>
-      <td>12.54</td>
-      <td>17.42</td>
-      <td>-4.88</td>
-      <td>10.0</td>
-      <td>12.54</td>
-      <td>17.53</td>
-      <td>-4.99</td>
-    </tr><tr data-pos="WR">
-      <td>249</td>
-      <td>Elic Ayomanor</td>
-      <td>WR</td>
-      <td></td>
-      <td>16.0</td>
-      <td>116.5</td>
-      <td>7.28</td>
-      <td>12.18</td>
-      <td>-4.89</td>
-      <td>16.0</td>
-      <td>7.28</td>
-      <td>13.44</td>
-      <td>-6.16</td>
-    </tr><tr data-pos="TE">
-      <td>250</td>
-      <td>Jake Tonges</td>
-      <td>TE</td>
-      <td></td>
-      <td>17.0</td>
-      <td>93.3</td>
-      <td>5.49</td>
-      <td>10.52</td>
-      <td>-5.03</td>
-      <td>17.0</td>
-      <td>5.49</td>
-      <td>10.06</td>
-      <td>-4.57</td>
-    </tr><tr data-pos="TE">
-      <td>251</td>
-      <td>Mike Gesicki</td>
-      <td>TE</td>
-      <td></td>
-      <td>13.0</td>
-      <td>70.7</td>
-      <td>5.44</td>
-      <td>10.52</td>
-      <td>-5.08</td>
-      <td>47.0</td>
-      <td>5.91</td>
-      <td>10.06</td>
-      <td>-4.16</td>
-    </tr><tr data-pos="WR">
-      <td>252</td>
-      <td>Darius Slayton</td>
-      <td>WR</td>
-      <td></td>
-      <td>14.0</td>
-      <td>98.8</td>
-      <td>7.06</td>
-      <td>12.18</td>
-      <td>-5.12</td>
-      <td>47.0</td>
-      <td>7.66</td>
-      <td>13.44</td>
-      <td>-5.78</td>
-    </tr><tr data-pos="RB">
-      <td>253</td>
-      <td>Audric Estime</td>
-      <td>RB</td>
-      <td></td>
-      <td>7.0</td>
-      <td>48.1</td>
-      <td>6.87</td>
-      <td>12.13</td>
-      <td>-5.26</td>
-      <td>20.0</td>
-      <td>4.84</td>
-      <td>12.38</td>
-      <td>-7.54</td>
-    </tr><tr data-pos="RB">
-      <td>254</td>
-      <td>Miles Sanders</td>
-      <td>RB</td>
-      <td></td>
-      <td>4.0</td>
-      <td>26.7</td>
-      <td>6.68</td>
-      <td>12.13</td>
-      <td>-5.45</td>
-      <td>31.0</td>
-      <td>6.18</td>
-      <td>12.38</td>
-      <td>-6.20</td>
-    </tr><tr data-pos="TE">
-      <td>255</td>
-      <td>Jonnu Smith</td>
-      <td>TE</td>
-      <td></td>
-      <td>17.0</td>
-      <td>85.2</td>
-      <td>5.01</td>
-      <td>10.52</td>
-      <td>-5.51</td>
-      <td>51.0</td>
-      <td>8.46</td>
-      <td>10.06</td>
-      <td>-1.60</td>
-    </tr><tr data-pos="TE">
-      <td>256</td>
-      <td>Noah Fant</td>
-      <td>TE</td>
-      <td></td>
-      <td>15.0</td>
-      <td>74.8</td>
-      <td>4.99</td>
-      <td>10.52</td>
-      <td>-5.53</td>
-      <td>46.0</td>
-      <td>5.48</td>
-      <td>10.06</td>
-      <td>-4.58</td>
-    </tr><tr data-pos="RB">
-      <td>257</td>
-      <td>Austin Ekeler</td>
-      <td>RB</td>
-      <td></td>
-      <td>2.0</td>
-      <td>13.1</td>
-      <td>6.55</td>
-      <td>12.13</td>
-      <td>-5.58</td>
-      <td>28.0</td>
-      <td>11.81</td>
-      <td>12.38</td>
-      <td>-0.57</td>
-    </tr><tr data-pos="TE">
-      <td>258</td>
-      <td>Cole Kmet</td>
-      <td>TE</td>
-      <td></td>
-      <td>16.0</td>
-      <td>78.7</td>
-      <td>4.92</td>
-      <td>10.52</td>
-      <td>-5.60</td>
-      <td>50.0</td>
-      <td>7.60</td>
-      <td>10.06</td>
-      <td>-2.46</td>
-    </tr><tr data-pos="QB">
-      <td>259</td>
-      <td>Mac Jones</td>
-      <td>QB</td>
-      <td></td>
-      <td>11.0</td>
-      <td>130.0</td>
-      <td>11.82</td>
-      <td>17.42</td>
-      <td>-5.60</td>
-      <td>32.0</td>
-      <td>10.39</td>
-      <td>17.53</td>
-      <td>-7.14</td>
-    </tr><tr data-pos="RB">
-      <td>260</td>
-      <td>Devin Singletary</td>
-      <td>RB</td>
-      <td></td>
-      <td>17.0</td>
-      <td>108.8</td>
-      <td>6.40</td>
-      <td>12.13</td>
-      <td>-5.73</td>
-      <td>49.0</td>
-      <td>7.61</td>
-      <td>12.38</td>
-      <td>-4.77</td>
-    </tr><tr data-pos="WR">
-      <td>261</td>
-      <td>Sterling Shepard</td>
-      <td>WR</td>
-      <td></td>
-      <td>13.0</td>
-      <td>82.0</td>
-      <td>6.31</td>
-      <td>12.18</td>
-      <td>-5.87</td>
-      <td>42.0</td>
-      <td>4.35</td>
-      <td>13.44</td>
-      <td>-9.09</td>
-    </tr><tr data-pos="WR">
-      <td>262</td>
-      <td>Greg Dortch</td>
-      <td>WR</td>
-      <td></td>
-      <td>12.0</td>
-      <td>75.1</td>
-      <td>6.26</td>
-      <td>12.18</td>
-      <td>-5.92</td>
-      <td>45.0</td>
-      <td>5.11</td>
-      <td>13.44</td>
-      <td>-8.33</td>
-    </tr><tr data-pos="TE">
-      <td>263</td>
-      <td>Darnell Washington</td>
-      <td>TE</td>
-      <td></td>
-      <td>16.0</td>
-      <td>73.4</td>
-      <td>4.59</td>
-      <td>10.52</td>
-      <td>-5.93</td>
-      <td>50.0</td>
-      <td>2.63</td>
-      <td>10.06</td>
-      <td>-7.43</td>
-    </tr><tr data-pos="QB">
-      <td>264</td>
-      <td>Tua Tagovailoa</td>
-      <td>QB</td>
-      <td></td>
-      <td>14.0</td>
-      <td>160.7</td>
-      <td>11.48</td>
-      <td>17.42</td>
-      <td>-5.94</td>
-      <td>42.0</td>
-      <td>14.59</td>
-      <td>17.53</td>
-      <td>-2.94</td>
-    </tr><tr data-pos="WR">
-      <td>265</td>
-      <td>Marvin Mims</td>
-      <td>WR</td>
-      <td></td>
-      <td>15.0</td>
-      <td>93.0</td>
-      <td>6.20</td>
-      <td>12.18</td>
-      <td>-5.97</td>
-      <td>48.0</td>
-      <td>6.11</td>
-      <td>13.44</td>
-      <td>-7.33</td>
-    </tr><tr data-pos="QB">
-      <td>266</td>
-      <td>Davis Mills</td>
-      <td>QB</td>
-      <td></td>
-      <td>6.0</td>
-      <td>68.6</td>
-      <td>11.43</td>
-      <td>17.42</td>
-      <td>-5.98</td>
-      <td>16.0</td>
-      <td>6.00</td>
-      <td>17.53</td>
-      <td>-11.53</td>
-    </tr><tr data-pos="QB">
-      <td>267</td>
-      <td>Marcus Mariota</td>
-      <td>QB</td>
-      <td></td>
-      <td>11.0</td>
-      <td>125.5</td>
-      <td>11.41</td>
-      <td>17.42</td>
-      <td>-6.01</td>
-      <td>17.0</td>
-      <td>10.77</td>
-      <td>17.53</td>
-      <td>-6.76</td>
-    </tr><tr data-pos="WR">
-      <td>268</td>
-      <td>Calvin Austin III</td>
-      <td>WR</td>
-      <td></td>
-      <td>14.0</td>
-      <td>86.2</td>
-      <td>6.16</td>
-      <td>12.18</td>
-      <td>-6.02</td>
-      <td>48.0</td>
-      <td>5.37</td>
-      <td>13.44</td>
       <td>-8.07</td>
-    </tr><tr data-pos="RB">
-      <td>269</td>
-      <td>Devin Neal</td>
-      <td>RB</td>
-      <td></td>
       <td>10.0</td>
-      <td>60.0</td>
-      <td>6.00</td>
-      <td>12.13</td>
-      <td>-6.13</td>
-      <td>10.0</td>
-      <td>6.00</td>
+      <td>4.06</td>
       <td>12.38</td>
-      <td>-6.38</td>
-    </tr><tr data-pos="QB">
-      <td>270</td>
-      <td>Joe Flacco</td>
-      <td>QB</td>
-      <td></td>
-      <td>13.0</td>
-      <td>146.7</td>
-      <td>11.28</td>
-      <td>17.42</td>
-      <td>-6.13</td>
-      <td>26.0</td>
-      <td>13.33</td>
-      <td>17.53</td>
-      <td>-4.21</td>
-    </tr><tr data-pos="WR">
-      <td>271</td>
-      <td>Hunter Renfrow</td>
-      <td>WR</td>
-      <td></td>
-      <td>6.0</td>
-      <td>35.9</td>
-      <td>5.98</td>
-      <td>12.18</td>
-      <td>-6.19</td>
-      <td>23.0</td>
-      <td>3.67</td>
-      <td>13.44</td>
-      <td>-9.77</td>
-    </tr><tr data-pos="WR">
-      <td>272</td>
-      <td>Xavier Legette</td>
-      <td>WR</td>
-      <td></td>
-      <td>15.0</td>
-      <td>89.3</td>
-      <td>5.95</td>
-      <td>12.18</td>
-      <td>-6.22</td>
-      <td>31.0</td>
-      <td>6.92</td>
-      <td>13.44</td>
-      <td>-6.52</td>
-    </tr><tr data-pos="RB">
-      <td>273</td>
-      <td>Ty Johnson</td>
-      <td>RB</td>
-      <td></td>
-      <td>17.0</td>
-      <td>100.3</td>
-      <td>5.90</td>
-      <td>12.13</td>
-      <td>-6.23</td>
-      <td>44.0</td>
-      <td>5.10</td>
-      <td>12.38</td>
-      <td>-7.28</td>
-    </tr><tr data-pos="RB">
-      <td>274</td>
-      <td>Nick Chubb</td>
-      <td>RB</td>
-      <td></td>
-      <td>15.0</td>
-      <td>88.3</td>
-      <td>5.89</td>
-      <td>12.13</td>
-      <td>-6.24</td>
-      <td>25.0</td>
-      <td>6.99</td>
-      <td>12.38</td>
-      <td>-5.39</td>
+      <td>-8.32</td>
     </tr><tr data-pos="TE">
-      <td>275</td>
-      <td>Ja'Tavion Sanders</td>
-      <td>TE</td>
-      <td></td>
-      <td>13.0</td>
-      <td>54.0</td>
-      <td>4.15</td>
+      <td>210</td>
+      <td>Gunnar Helm</td>
+      <td>TEN</td>
+      <td>TE28</td>
+      <td>21.10</td>
+      <td>16.0</td>
+      <td>91.7</td>
+      <td>5.73</td>
       <td>10.52</td>
-      <td>-6.36</td>
-      <td>29.0</td>
-      <td>4.39</td>
-      <td>10.06</td>
-      <td>-5.68</td>
-    </tr><tr data-pos="QB">
-      <td>276</td>
-      <td>Spencer Rattler</td>
-      <td>QB</td>
-      <td></td>
-      <td>9.0</td>
-      <td>99.1</td>
-      <td>11.01</td>
-      <td>17.42</td>
-      <td>-6.40</td>
+      <td>-4.79</td>
       <td>16.0</td>
-      <td>10.40</td>
-      <td>17.53</td>
-      <td>-7.13</td>
-    </tr><tr data-pos="WR">
-      <td>277</td>
-      <td>Tez Johnson</td>
-      <td>WR</td>
-      <td></td>
-      <td>16.0</td>
-      <td>92.4</td>
-      <td>5.78</td>
-      <td>12.18</td>
-      <td>-6.40</td>
-      <td>16.0</td>
-      <td>5.78</td>
-      <td>13.44</td>
-      <td>-7.66</td>
-    </tr><tr data-pos="WR">
-      <td>278</td>
-      <td>Tyquan Thornton</td>
-      <td>WR</td>
-      <td></td>
-      <td>14.0</td>
-      <td>80.8</td>
-      <td>5.77</td>
-      <td>12.18</td>
-      <td>-6.40</td>
-      <td>29.0</td>
-      <td>4.02</td>
-      <td>13.44</td>
-      <td>-9.41</td>
-    </tr><tr data-pos="WR">
-      <td>279</td>
-      <td>Xavier Hutchinson</td>
-      <td>WR</td>
-      <td></td>
-      <td>17.0</td>
-      <td>98.0</td>
-      <td>5.76</td>
-      <td>12.18</td>
-      <td>-6.41</td>
-      <td>49.0</td>
-      <td>2.93</td>
-      <td>13.44</td>
-      <td>-10.51</td>
-    </tr><tr data-pos="WR">
-      <td>280</td>
-      <td>Kendrick Bourne</td>
-      <td>WR</td>
-      <td></td>
-      <td>16.0</td>
-      <td>92.1</td>
-      <td>5.76</td>
-      <td>12.18</td>
-      <td>-6.42</td>
-      <td>36.0</td>
-      <td>7.14</td>
-      <td>13.44</td>
-      <td>-6.29</td>
-    </tr><tr data-pos="WR">
-      <td>281</td>
-      <td>Luke McCaffrey</td>
-      <td>WR</td>
-      <td></td>
-      <td>9.0</td>
-      <td>51.3</td>
-      <td>5.70</td>
-      <td>12.18</td>
-      <td>-6.48</td>
-      <td>26.0</td>
-      <td>3.31</td>
-      <td>13.44</td>
-      <td>-10.12</td>
-    </tr><tr data-pos="WR">
-      <td>282</td>
-      <td>DeMario Douglas</td>
-      <td>WR</td>
-      <td></td>
-      <td>17.0</td>
-      <td>95.8</td>
-      <td>5.64</td>
-      <td>12.18</td>
-      <td>-6.54</td>
-      <td>48.0</td>
-      <td>7.31</td>
-      <td>13.44</td>
-      <td>-6.13</td>
-    </tr><tr data-pos="WR">
-      <td>283</td>
-      <td>KaVontae Turpin</td>
-      <td>WR</td>
-      <td></td>
-      <td>15.0</td>
-      <td>84.5</td>
-      <td>5.63</td>
-      <td>12.18</td>
-      <td>-6.54</td>
-      <td>48.0</td>
-      <td>5.18</td>
-      <td>13.44</td>
-      <td>-8.26</td>
+      <td>5.73</td>
+      <td>9.90</td>
+      <td>-4.17</td>
     </tr><tr data-pos="RB">
-      <td>284</td>
-      <td>Emanuel Wilson</td>
-      <td>RB</td>
-      <td></td>
-      <td>17.0</td>
-      <td>94.5</td>
-      <td>5.56</td>
+      <td>211</td>
+      <td>Samaje Perine</td>
+      <td>CIN</td>
+      <td>RB73</td>
+      <td>21.11</td>
+      <td>15.0</td>
+      <td>77.9</td>
+      <td>5.19</td>
       <td>12.13</td>
-      <td>-6.57</td>
-      <td>41.0</td>
-      <td>5.01</td>
+      <td>-6.94</td>
+      <td>49.0</td>
+      <td>5.39</td>
       <td>12.38</td>
-      <td>-7.37</td>
+      <td>-6.99</td>
+    </tr><tr data-pos="QB">
+      <td>212</td>
+      <td>Geno Smith</td>
+      <td>NYJ</td>
+      <td>QB30</td>
+      <td>21.12</td>
+      <td>15.0</td>
+      <td>173.9</td>
+      <td>11.59</td>
+      <td>17.42</td>
+      <td>-5.82</td>
+      <td>47.0</td>
+      <td>13.63</td>
+      <td>17.86</td>
+      <td>-4.23</td>
+    </tr><tr data-pos="RB">
+      <td>213</td>
+      <td>George Holani</td>
+      <td>SEA</td>
+      <td>RB74</td>
+      <td>22.02</td>
+      <td>11.0</td>
+      <td>14.8</td>
+      <td>1.35</td>
+      <td>12.13</td>
+      <td>-10.78</td>
+      <td>11.0</td>
+      <td>1.35</td>
+      <td>12.38</td>
+      <td>-11.03</td>
     </tr><tr data-pos="WR">
-      <td>285</td>
+      <td>214</td>
       <td>Darnell Mooney</td>
-      <td>WR</td>
-      <td></td>
+      <td>NYG</td>
+      <td>WR86</td>
+      <td>22.03</td>
       <td>15.0</td>
       <td>82.3</td>
       <td>5.49</td>
       <td>12.18</td>
       <td>-6.69</td>
       <td>46.0</td>
-      <td>7.70</td>
-      <td>13.44</td>
-      <td>-5.73</td>
-    </tr><tr data-pos="TE">
-      <td>286</td>
-      <td>Tommy Tremble</td>
-      <td>TE</td>
-      <td></td>
-      <td>17.0</td>
-      <td>63.9</td>
-      <td>3.76</td>
-      <td>10.52</td>
-      <td>-6.76</td>
-      <td>45.0</td>
-      <td>4.02</td>
-      <td>10.06</td>
-      <td>-6.05</td>
-    </tr><tr data-pos="TE">
-      <td>287</td>
-      <td>Daniel Bellinger</td>
-      <td>TE</td>
-      <td></td>
-      <td>16.0</td>
-      <td>59.6</td>
-      <td>3.72</td>
-      <td>10.52</td>
-      <td>-6.79</td>
-      <td>50.0</td>
-      <td>2.73</td>
-      <td>10.06</td>
-      <td>-7.33</td>
-    </tr><tr data-pos="QB">
-      <td>288</td>
-      <td>Shedeur Sanders</td>
-      <td>QB</td>
-      <td></td>
-      <td>8.0</td>
-      <td>84.9</td>
-      <td>10.61</td>
-      <td>17.42</td>
-      <td>-6.80</td>
-      <td>8.0</td>
-      <td>10.61</td>
-      <td>17.53</td>
-      <td>-6.92</td>
-    </tr><tr data-pos="TE">
-      <td>289</td>
-      <td>Austin Hooper</td>
-      <td>TE</td>
-      <td></td>
-      <td>16.0</td>
-      <td>59.3</td>
-      <td>3.71</td>
-      <td>10.52</td>
-      <td>-6.81</td>
-      <td>50.0</td>
-      <td>4.33</td>
-      <td>10.06</td>
-      <td>-5.74</td>
-    </tr><tr data-pos="TE">
-      <td>290</td>
-      <td>Davis Allen</td>
-      <td>TE</td>
-      <td></td>
-      <td>17.0</td>
-      <td>62.8</td>
-      <td>3.69</td>
-      <td>10.52</td>
-      <td>-6.82</td>
-      <td>47.0</td>
-      <td>2.09</td>
-      <td>10.06</td>
-      <td>-7.97</td>
-    </tr><tr data-pos="TE">
-      <td>291</td>
-      <td>Josh Oliver</td>
-      <td>TE</td>
-      <td></td>
-      <td>15.0</td>
-      <td>55.0</td>
-      <td>3.67</td>
-      <td>10.52</td>
-      <td>-6.85</td>
-      <td>47.0</td>
-      <td>3.70</td>
-      <td>10.06</td>
-      <td>-6.36</td>
-    </tr><tr data-pos="QB">
-      <td>292</td>
-      <td>Philip Rivers</td>
-      <td>QB</td>
-      <td></td>
-      <td>3.0</td>
-      <td>31.7</td>
-      <td>10.57</td>
-      <td>17.42</td>
-      <td>-6.85</td>
-      <td>3.0</td>
-      <td>10.57</td>
-      <td>17.53</td>
-      <td>-6.97</td>
-    </tr><tr data-pos="WR">
-      <td>293</td>
-      <td>Olamide Zaccheaus</td>
-      <td>WR</td>
-      <td></td>
-      <td>16.0</td>
-      <td>84.8</td>
-      <td>5.30</td>
-      <td>12.18</td>
-      <td>-6.87</td>
-      <td>50.0</td>
-      <td>4.71</td>
-      <td>13.44</td>
-      <td>-8.72</td>
-    </tr><tr data-pos="WR">
-      <td>294</td>
-      <td>Andrei Iosivas</td>
-      <td>WR</td>
-      <td></td>
-      <td>17.0</td>
-      <td>89.9</td>
-      <td>5.29</td>
-      <td>12.18</td>
-      <td>-6.89</td>
-      <td>50.0</td>
-      <td>5.21</td>
-      <td>13.44</td>
-      <td>-8.23</td>
-    </tr><tr data-pos="TE">
-      <td>295</td>
-      <td>Hunter Long</td>
-      <td>TE</td>
-      <td></td>
-      <td>9.0</td>
-      <td>32.5</td>
-      <td>3.61</td>
-      <td>10.52</td>
-      <td>-6.91</td>
-      <td>26.0</td>
-      <td>1.75</td>
-      <td>10.06</td>
-      <td>-8.31</td>
-    </tr><tr data-pos="WR">
-      <td>296</td>
-      <td>Ronnie Bell</td>
-      <td>WR</td>
-      <td></td>
-      <td>2.0</td>
-      <td>10.3</td>
-      <td>5.15</td>
-      <td>12.18</td>
-      <td>-7.02</td>
-      <td>28.0</td>
-      <td>1.62</td>
-      <td>13.44</td>
-      <td>-11.82</td>
-    </tr><tr data-pos="WR">
-      <td>297</td>
-      <td>Gabe Davis</td>
-      <td>WR</td>
-      <td></td>
-      <td>6.0</td>
-      <td>30.9</td>
-      <td>5.15</td>
-      <td>12.18</td>
-      <td>-7.02</td>
-      <td>33.0</td>
-      <td>7.46</td>
-      <td>13.44</td>
-      <td>-5.98</td>
+      <td>7.74</td>
+      <td>12.85</td>
+      <td>-5.11</td>
     </tr><tr data-pos="RB">
-      <td>298</td>
-      <td>Raheim Sanders</td>
-      <td>RB</td>
-      <td></td>
-      <td>4.0</td>
-      <td>20.3</td>
-      <td>5.08</td>
-      <td>12.13</td>
-      <td>-7.05</td>
-      <td>4.0</td>
-      <td>5.08</td>
-      <td>12.38</td>
-      <td>-7.30</td>
-    </tr><tr data-pos="QB">
-      <td>299</td>
-      <td>Kirk Cousins</td>
-      <td>QB</td>
-      <td></td>
+      <td>215</td>
+      <td>Justice Hill</td>
+      <td>BAL</td>
+      <td>RB75</td>
+      <td>22.06</td>
       <td>10.0</td>
-      <td>103.5</td>
-      <td>10.35</td>
-      <td>17.42</td>
-      <td>-7.07</td>
-      <td>32.0</td>
-      <td>13.42</td>
-      <td>17.53</td>
-      <td>-4.11</td>
-    </tr><tr data-pos="TE">
-      <td>300</td>
-      <td>Elijah Higgins</td>
-      <td>TE</td>
-      <td></td>
-      <td>17.0</td>
-      <td>58.1</td>
-      <td>3.42</td>
-      <td>10.52</td>
-      <td>-7.10</td>
-      <td>45.0</td>
-      <td>3.19</td>
-      <td>10.06</td>
-      <td>-6.87</td>
-    </tr><tr data-pos="TE">
-      <td>301</td>
-      <td>Brock Wright</td>
-      <td>TE</td>
-      <td></td>
-      <td>11.0</td>
-      <td>36.8</td>
-      <td>3.35</td>
-      <td>10.52</td>
-      <td>-7.17</td>
-      <td>42.0</td>
-      <td>2.38</td>
-      <td>10.06</td>
-      <td>-7.68</td>
-    </tr><tr data-pos="TE">
-      <td>302</td>
-      <td>Taysom Hill</td>
-      <td>TE</td>
-      <td></td>
-      <td>13.0</td>
-      <td>41.8</td>
-      <td>3.22</td>
-      <td>10.52</td>
-      <td>-7.30</td>
-      <td>37.0</td>
-      <td>7.77</td>
-      <td>10.06</td>
-      <td>-2.29</td>
-    </tr><tr data-pos="TE">
-      <td>303</td>
-      <td>Tanner Hudson</td>
-      <td>TE</td>
-      <td></td>
-      <td>15.0</td>
-      <td>47.8</td>
-      <td>3.19</td>
-      <td>10.52</td>
-      <td>-7.33</td>
-      <td>38.0</td>
-      <td>4.38</td>
-      <td>10.06</td>
-      <td>-5.68</td>
-    </tr><tr data-pos="TE">
-      <td>304</td>
-      <td>Jackson Hawes</td>
-      <td>TE</td>
-      <td></td>
-      <td>17.0</td>
-      <td>52.7</td>
-      <td>3.10</td>
-      <td>10.52</td>
-      <td>-7.42</td>
-      <td>17.0</td>
-      <td>3.10</td>
-      <td>10.06</td>
-      <td>-6.96</td>
-    </tr><tr data-pos="RB">
-      <td>305</td>
-      <td>Antonio Gibson</td>
-      <td>RB</td>
-      <td></td>
-      <td>5.0</td>
-      <td>23.2</td>
-      <td>4.64</td>
+      <td>65.2</td>
+      <td>6.52</td>
       <td>12.13</td>
-      <td>-7.49</td>
-      <td>38.0</td>
-      <td>6.68</td>
-      <td>12.38</td>
-      <td>-5.70</td>
-    </tr><tr data-pos="QB">
-      <td>306</td>
-      <td>Tyrod Taylor</td>
-      <td>QB</td>
-      <td></td>
-      <td>6.0</td>
-      <td>59.5</td>
-      <td>9.92</td>
-      <td>17.42</td>
-      <td>-7.50</td>
-      <td>19.0</td>
-      <td>8.78</td>
-      <td>17.53</td>
-      <td>-8.75</td>
-    </tr><tr data-pos="WR">
-      <td>307</td>
-      <td>Josh Reynolds</td>
-      <td>WR</td>
-      <td></td>
-      <td>5.0</td>
-      <td>23.1</td>
-      <td>4.62</td>
-      <td>12.18</td>
-      <td>-7.55</td>
-      <td>31.0</td>
-      <td>6.14</td>
-      <td>13.44</td>
-      <td>-7.30</td>
-    </tr><tr data-pos="WR">
-      <td>308</td>
-      <td>Cedric Tillman</td>
-      <td>WR</td>
-      <td></td>
-      <td>13.0</td>
-      <td>60.0</td>
-      <td>4.62</td>
-      <td>12.18</td>
-      <td>-7.56</td>
-      <td>38.0</td>
-      <td>4.86</td>
-      <td>13.44</td>
-      <td>-8.58</td>
-    </tr><tr data-pos="TE">
-      <td>309</td>
-      <td>Luke Musgrave</td>
-      <td>TE</td>
-      <td></td>
-      <td>17.0</td>
-      <td>49.2</td>
-      <td>2.89</td>
-      <td>10.52</td>
-      <td>-7.62</td>
-      <td>35.0</td>
-      <td>3.88</td>
-      <td>10.06</td>
-      <td>-6.18</td>
-    </tr><tr data-pos="RB">
-      <td>310</td>
-      <td>Emari Demercado</td>
-      <td>RB</td>
-      <td></td>
-      <td>13.0</td>
-      <td>58.3</td>
-      <td>4.48</td>
-      <td>12.13</td>
-      <td>-7.64</td>
-      <td>40.0</td>
-      <td>4.66</td>
-      <td>12.38</td>
-      <td>-7.72</td>
-    </tr><tr data-pos="TE">
-      <td>311</td>
-      <td>Mitchell Evans</td>
-      <td>TE</td>
-      <td></td>
-      <td>17.0</td>
-      <td>48.2</td>
-      <td>2.84</td>
-      <td>10.52</td>
-      <td>-7.68</td>
-      <td>17.0</td>
-      <td>2.84</td>
-      <td>10.06</td>
-      <td>-7.23</td>
-    </tr><tr data-pos="QB">
-      <td>312</td>
-      <td>Jake Browning</td>
-      <td>QB</td>
-      <td></td>
-      <td>5.0</td>
-      <td>48.7</td>
-      <td>9.74</td>
-      <td>17.42</td>
-      <td>-7.68</td>
-      <td>14.0</td>
-      <td>13.79</td>
-      <td>17.53</td>
-      <td>-3.74</td>
-    </tr><tr data-pos="RB">
-      <td>313</td>
-      <td>Isaiah Davis</td>
-      <td>RB</td>
-      <td></td>
-      <td>16.0</td>
-      <td>71.2</td>
-      <td>4.45</td>
-      <td>12.13</td>
-      <td>-7.68</td>
-      <td>33.0</td>
-      <td>3.55</td>
-      <td>12.38</td>
-      <td>-8.83</td>
-    </tr><tr data-pos="TE">
-      <td>314</td>
-      <td>Elijah Arroyo</td>
-      <td>TE</td>
-      <td></td>
-      <td>13.0</td>
-      <td>36.9</td>
-      <td>2.84</td>
-      <td>10.52</td>
-      <td>-7.68</td>
-      <td>13.0</td>
-      <td>2.84</td>
-      <td>10.06</td>
-      <td>-7.22</td>
-    </tr><tr data-pos="WR">
-      <td>315</td>
-      <td>John Metchie</td>
-      <td>WR</td>
-      <td></td>
-      <td>16.0</td>
-      <td>71.9</td>
-      <td>4.49</td>
-      <td>12.18</td>
-      <td>-7.68</td>
-      <td>45.0</td>
-      <td>3.54</td>
-      <td>13.44</td>
-      <td>-9.89</td>
-    </tr><tr data-pos="WR">
-      <td>316</td>
-      <td>Kalif Raymond</td>
-      <td>WR</td>
-      <td></td>
-      <td>15.0</td>
-      <td>66.8</td>
-      <td>4.45</td>
-      <td>12.18</td>
-      <td>-7.72</td>
-      <td>44.0</td>
-      <td>5.02</td>
-      <td>13.44</td>
-      <td>-8.42</td>
-    </tr><tr data-pos="WR">
-      <td>317</td>
-      <td>Christian Kirk</td>
-      <td>WR</td>
-      <td></td>
-      <td>13.0</td>
-      <td>57.9</td>
-      <td>4.45</td>
-      <td>12.18</td>
-      <td>-7.72</td>
-      <td>33.0</td>
-      <td>8.46</td>
-      <td>13.44</td>
-      <td>-4.98</td>
-    </tr><tr data-pos="TE">
-      <td>318</td>
-      <td>Jeremy Ruckert</td>
-      <td>TE</td>
-      <td></td>
-      <td>17.0</td>
-      <td>46.9</td>
-      <td>2.76</td>
-      <td>10.52</td>
-      <td>-7.76</td>
-      <td>49.0</td>
-      <td>2.17</td>
-      <td>10.06</td>
-      <td>-7.89</td>
-    </tr><tr data-pos="WR">
-      <td>319</td>
-      <td>Van Jefferson</td>
-      <td>WR</td>
-      <td></td>
-      <td>16.0</td>
-      <td>70.0</td>
-      <td>4.38</td>
-      <td>12.18</td>
-      <td>-7.80</td>
-      <td>50.0</td>
-      <td>3.50</td>
-      <td>13.44</td>
-      <td>-9.94</td>
-    </tr><tr data-pos="WR">
-      <td>320</td>
-      <td>Josh Palmer</td>
-      <td>WR</td>
-      <td></td>
-      <td>12.0</td>
-      <td>52.3</td>
-      <td>4.36</td>
-      <td>12.18</td>
-      <td>-7.82</td>
-      <td>37.0</td>
-      <td>7.20</td>
-      <td>13.44</td>
-      <td>-6.24</td>
-    </tr><tr data-pos="TE">
-      <td>321</td>
-      <td>Adam Trautman</td>
-      <td>TE</td>
-      <td></td>
-      <td>17.0</td>
-      <td>45.5</td>
-      <td>2.68</td>
-      <td>10.52</td>
-      <td>-7.84</td>
-      <td>51.0</td>
-      <td>2.94</td>
-      <td>10.06</td>
-      <td>-7.13</td>
-    </tr><tr data-pos="RB">
-      <td>322</td>
-      <td>Jaret Patterson</td>
-      <td>RB</td>
-      <td></td>
-      <td>6.0</td>
-      <td>25.7</td>
-      <td>4.28</td>
-      <td>12.13</td>
-      <td>-7.85</td>
-      <td>6.0</td>
-      <td>4.28</td>
-      <td>12.38</td>
-      <td>-8.10</td>
-    </tr><tr data-pos="WR">
-      <td>323</td>
-      <td>JuJu Smith-Schuster</td>
-      <td>WR</td>
-      <td></td>
-      <td>17.0</td>
-      <td>73.5</td>
-      <td>4.32</td>
-      <td>12.18</td>
-      <td>-7.85</td>
-      <td>42.0</td>
-      <td>4.47</td>
-      <td>13.44</td>
-      <td>-8.97</td>
-    </tr><tr data-pos="RB">
-      <td>324</td>
-      <td>Jeremy McNichols</td>
-      <td>RB</td>
-      <td></td>
-      <td>17.0</td>
-      <td>72.7</td>
-      <td>4.28</td>
-      <td>12.13</td>
-      <td>-7.85</td>
-      <td>34.0</td>
-      <td>4.01</td>
-      <td>12.38</td>
-      <td>-8.37</td>
-    </tr><tr data-pos="WR">
-      <td>325</td>
-      <td>Tyler Lockett</td>
-      <td>WR</td>
-      <td></td>
-      <td>17.0</td>
-      <td>73.1</td>
-      <td>4.30</td>
-      <td>12.18</td>
-      <td>-7.87</td>
-      <td>51.0</td>
-      <td>7.77</td>
-      <td>13.44</td>
-      <td>-5.66</td>
-    </tr><tr data-pos="WR">
-      <td>326</td>
-      <td>Demarcus Robinson</td>
-      <td>WR</td>
-      <td></td>
-      <td>14.0</td>
-      <td>58.2</td>
-      <td>4.16</td>
-      <td>12.18</td>
-      <td>-8.02</td>
-      <td>47.0</td>
-      <td>5.73</td>
-      <td>13.44</td>
-      <td>-7.71</td>
-    </tr><tr data-pos="WR">
-      <td>327</td>
-      <td>Kevin Austin</td>
-      <td>WR</td>
-      <td></td>
-      <td>8.0</td>
-      <td>33.0</td>
-      <td>4.12</td>
-      <td>12.18</td>
-      <td>-8.05</td>
-      <td>16.0</td>
-      <td>3.75</td>
-      <td>13.44</td>
-      <td>-9.69</td>
-    </tr><tr data-pos="TE">
-      <td>328</td>
-      <td>Noah Gray</td>
-      <td>TE</td>
-      <td></td>
-      <td>16.0</td>
-      <td>38.8</td>
-      <td>2.42</td>
-      <td>10.52</td>
-      <td>-8.09</td>
-      <td>50.0</td>
-      <td>4.45</td>
-      <td>10.06</td>
       <td>-5.61</td>
-    </tr><tr data-pos="RB">
-      <td>329</td>
-      <td>Jaleel McLaughlin</td>
-      <td>RB</td>
-      <td></td>
-      <td>8.0</td>
-      <td>31.4</td>
-      <td>3.92</td>
-      <td>12.13</td>
-      <td>-8.20</td>
       <td>41.0</td>
-      <td>5.72</td>
+      <td>7.36</td>
       <td>12.38</td>
-      <td>-6.66</td>
-    </tr><tr data-pos="TE">
-      <td>330</td>
-      <td>Will Dissly</td>
-      <td>TE</td>
+      <td>-5.02</td>
+    </tr><tr data-pos="WR" style="color: firebrick;">
+      <td>216</td>
+      <td>Germie Bernard</td>
+      <td>PIT</td>
+      <td>WR87</td>
+      <td>22.07</td>
       <td></td>
-      <td>9.0</td>
-      <td>20.7</td>
-      <td>2.30</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr><tr data-pos="WR" style="color: firebrick;">
+      <td>217</td>
+      <td>Chris Bell</td>
+      <td>MIA</td>
+      <td>WR88</td>
+      <td>22.08</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr><tr data-pos="WR">
+      <td>218</td>
+      <td>Tyreek Hill</td>
+      <td>FA</td>
+      <td>WR89</td>
+      <td>22.09</td>
+      <td>4.0</td>
+      <td>53.5</td>
+      <td>13.38</td>
+      <td>12.18</td>
+      <td>1.20</td>
+      <td>37.0</td>
+      <td>15.70</td>
+      <td>12.85</td>
+      <td>2.85</td>
+    </tr><tr data-pos="TE">
+      <td>219</td>
+      <td>Cade Otton</td>
+      <td>TB</td>
+      <td>TE29</td>
+      <td>22.10</td>
+      <td>16.0</td>
+      <td>122.2</td>
+      <td>7.64</td>
       <td>10.52</td>
-      <td>-8.22</td>
-      <td>40.0</td>
-      <td>4.28</td>
-      <td>10.06</td>
-      <td>-5.79</td>
+      <td>-2.88</td>
+      <td>47.0</td>
+      <td>8.22</td>
+      <td>9.90</td>
+      <td>-1.68</td>
+    </tr><tr data-pos="TE">
+      <td>220</td>
+      <td>Colby Parkinson</td>
+      <td>LAR</td>
+      <td>TE30</td>
+      <td>22.11</td>
+      <td>15.0</td>
+      <td>129.8</td>
+      <td>8.65</td>
+      <td>10.52</td>
+      <td>-1.86</td>
+      <td>49.0</td>
+      <td>6.06</td>
+      <td>9.90</td>
+      <td>-3.84</td>
+    </tr><tr data-pos="RB" style="color: firebrick;">
+      <td>221</td>
+      <td>Nicholas Singleton</td>
+      <td>TEN</td>
+      <td>RB76</td>
+      <td>22.12</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr><tr data-pos="WR">
+      <td>222</td>
+      <td>Keon Coleman</td>
+      <td>BUF</td>
+      <td>WR90</td>
+      <td>23.01</td>
+      <td>13.0</td>
+      <td>102.4</td>
+      <td>7.88</td>
+      <td>12.18</td>
+      <td>-4.30</td>
+      <td>26.0</td>
+      <td>8.16</td>
+      <td>12.85</td>
+      <td>-4.69</td>
+    </tr><tr data-pos="RB">
+      <td>223</td>
+      <td>James Conner</td>
+      <td>ARI</td>
+      <td>RB77</td>
+      <td>23.02</td>
+      <td>3.0</td>
+      <td>33.3</td>
+      <td>11.10</td>
+      <td>12.13</td>
+      <td>-1.03</td>
+      <td>32.0</td>
+      <td>14.98</td>
+      <td>12.38</td>
+      <td>2.60</td>
+    </tr><tr data-pos="RB" style="color: firebrick;">
+      <td>224</td>
+      <td>Jordan James</td>
+      <td>SF</td>
+      <td>RB78</td>
+      <td>23.03</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr><tr data-pos="TE">
+      <td>225</td>
+      <td>David Njoku</td>
+      <td>LAC</td>
+      <td>TE31</td>
+      <td>23.04</td>
+      <td>12.0</td>
+      <td>86.3</td>
+      <td>7.19</td>
+      <td>10.52</td>
+      <td>-3.33</td>
+      <td>39.0</td>
+      <td>10.23</td>
+      <td>9.90</td>
+      <td>0.33</td>
+    </tr><tr data-pos="TE">
+      <td>226</td>
+      <td>Pat Freiermuth</td>
+      <td>PIT</td>
+      <td>TE32</td>
+      <td>23.05</td>
+      <td>17.0</td>
+      <td>113.6</td>
+      <td>6.68</td>
+      <td>10.52</td>
+      <td>-3.84</td>
+      <td>46.0</td>
+      <td>7.78</td>
+      <td>9.90</td>
+      <td>-2.12</td>
+    </tr><tr data-pos="WR" style="color: firebrick;">
+      <td>227</td>
+      <td>Antonio Williams</td>
+      <td>WAS</td>
+      <td>WR91</td>
+      <td>23.06</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr><tr data-pos="WR" style="color: firebrick;">
+      <td>228</td>
+      <td>Ted Hurst III</td>
+      <td>TB</td>
+      <td>WR92</td>
+      <td>23.09</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr><tr data-pos="WR">
+      <td>229</td>
+      <td>Calvin Ridley</td>
+      <td>TEN</td>
+      <td>WR93</td>
+      <td>23.10</td>
+      <td>7.0</td>
+      <td>47.3</td>
+      <td>6.76</td>
+      <td>12.18</td>
+      <td>-5.42</td>
+      <td>41.0</td>
+      <td>10.70</td>
+      <td>12.85</td>
+      <td>-2.15</td>
+    </tr><tr data-pos="WR">
+      <td>230</td>
+      <td>Isaac TeSlaa</td>
+      <td>DET</td>
+      <td>WR94</td>
+      <td>23.11</td>
+      <td>17.0</td>
+      <td>75.9</td>
+      <td>4.46</td>
+      <td>12.18</td>
+      <td>-7.71</td>
+      <td>17.0</td>
+      <td>4.46</td>
+      <td>12.85</td>
+      <td>-8.39</td>
+    </tr><tr data-pos="WR">
+      <td>231</td>
+      <td>Chimere Dike</td>
+      <td>TEN</td>
+      <td>WR95</td>
+      <td>23.12</td>
+      <td>17.0</td>
+      <td>126.1</td>
+      <td>7.42</td>
+      <td>12.18</td>
+      <td>-4.76</td>
+      <td>17.0</td>
+      <td>7.42</td>
+      <td>12.85</td>
+      <td>-5.43</td>
     </tr></tbody>
 </table>
 
@@ -5422,6 +4341,75 @@ function clearPositions() {
 
 
 // ========================================================
+// PRINT TABLE (hide baseline columns)
+// ========================================================
+//
+// Hides the "2025 Baseline PPG" and "3-Year Baseline PPG" columns so
+// the table prints cleaner. Matches on header text rather than a
+// fixed column index, so it keeps working if columns are reordered
+// later. This is a one-way hide -- reload the page to bring the
+// columns back.
+// ========================================================
+
+function hideBaselineColumns() {
+
+    const table =
+        document.getElementById(
+            "draftTable"
+        );
+
+    const headerCells =
+        Array.from(
+            table.querySelectorAll(
+                "thead th"
+            )
+        );
+
+    const hideIndexes = [];
+
+    headerCells.forEach(
+        function(th, index) {
+
+            const label =
+                th.textContent.trim();
+
+            if (label.includes("Baseline PPG")) {
+
+                hideIndexes.push(index);
+                th.style.display = "none";
+
+            }
+
+        }
+    );
+
+    const bodyRows =
+        table.querySelectorAll(
+            "tbody tr"
+        );
+
+    bodyRows.forEach(
+        function(row) {
+
+            hideIndexes.forEach(
+                function(index) {
+
+                    if (row.children[index]) {
+
+                        row.children[index].style.display = "none";
+
+                    }
+
+                }
+            );
+
+        }
+    );
+
+}
+
+
+// ========================================================
 // POSITION CHECKBOX EVENTS
 // ========================================================
 
@@ -5470,7 +4458,9 @@ document
 
             const playerCell =
                 row.children[1];
-
+                
+            const sleeperCell =
+                row.children[2];
 
             rankCell.classList.add(
                 "rank-number"
@@ -5478,6 +4468,10 @@ document
 
             playerCell.classList.add(
                 "player-name"
+            );
+            
+            sleeperCell.classList.add(
+                "is-sleeper"
             );
 
 
@@ -5498,6 +4492,17 @@ document
 
                     row.classList.toggle(
                         "player-drafted"
+                    );
+
+                }
+            );
+            
+            sleeperCell.addEventListener(
+                "click",
+                function() {
+
+                    row.classList.toggle(
+                        "sleeper-picked"
                     );
 
                 }
