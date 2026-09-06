@@ -1,4 +1,4 @@
-#claude 20260902
+#claude 20260831
 import re
 import pandas as pd
 
@@ -321,7 +321,7 @@ ranked_df["Draft_Rank"] = ranked_df.index + 1
 # OUTPUT COLUMNS
 # ============================================================
 output_cols = [
-    "Draft_Rank", "Player", "Team", "Pos", "ADP",
+    "Draft_Rank", "Player", "Pos", "Team", "ADP",
     "Current_G", "Current_PPR", "Current_PPG", "Current_Baseline_PPG", "Current_VORP",
     "Historical_G", "Historical_PPG", "Historical_Baseline_PPG", "Historical_VORP",
 ]
@@ -349,6 +349,14 @@ pos_keys = final_output["Pos_Key"].fillna("").tolist()
 final_output = final_output.drop(columns=["Is_New_Player", "Pos_Key"])
 
 html_table = final_output.to_html(index=False, classes="table", table_id="draftTable", na_rep="", justify="left")
+
+# filterTable() looks up the Rank header by id to relabel it ("Rank" vs
+# "RB Rank" etc. depending on the position filter) -- pandas' to_html()
+# doesn't let us set an id on a specific header cell, so it's injected
+# here directly. This runs unconditionally (not inside the row-styling
+# branch below) so it's never skipped even if that branch's row-count
+# guard fails.
+html_table = html_table.replace("<th>Rank</th>", '<th id="rankHeader">Rank</th>', 1)
 
 # ============================================================
 # HIGHLIGHT NEW (ADP-ONLY) PLAYERS IN FIREBRICK RED, TAG POSITION
@@ -566,14 +574,183 @@ h2 {{
 
 .print-button {{
 
-    background-color: #15803d;
+    background-color: #475569;
 
 }}
 
 
 .print-button:hover {{
 
+    background-color: #334155;
+
+}}
+
+
+.best-available-box {{
+
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    margin-left: 20px;
+
+    padding: 6px 12px;
+
+    background-color: #111111;
+
+    border: 1px solid #333333;
+
+    border-radius: 6px;
+
+    color: #dddddd;
+
+    font-size: 13px;
+
+}}
+
+
+.best-available-box .best-available-label {{
+
+    color: #8fffa8;
+
+    font-weight: bold;
+
+}}
+
+
+.draft-button {{
+
+    background-color: #15803d;
+
+    padding: 4px 10px;
+
+    font-size: 12px;
+
+}}
+
+
+.draft-button:hover {{
+
     background-color: #166534;
+
+}}
+
+
+/* ========================================================
+   MY ROSTER BOX
+   ======================================================== */
+
+.header-flex {{
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: flex-start;
+
+    gap: 20px;
+
+    flex-wrap: wrap;
+
+}}
+
+
+.header-left {{
+
+    flex: 1;
+
+    min-width: 300px;
+
+}}
+
+
+.roster-box {{
+
+    background-color: #1e1e1e;
+
+    border: 1px solid #333333;
+
+    border-radius: 8px;
+
+    padding: 12px 16px;
+
+    min-width: 340px;
+
+    box-shadow:
+        0 2px 8px
+        rgba(0, 0, 0, 0.4);
+
+}}
+
+
+.roster-box h3 {{
+
+    margin: 0 0 10px 0;
+
+    color: #ffffff;
+
+    font-size: 16px;
+
+}}
+
+
+.roster-table {{
+
+    width: 100%;
+
+    border-collapse: collapse;
+
+    font-size: 13px;
+
+}}
+
+
+.roster-table th {{
+
+    text-align: left;
+
+    color: #999999;
+
+    font-weight: normal;
+
+    padding: 4px 8px;
+
+    border-bottom: 1px solid #333333;
+
+}}
+
+
+.roster-table td {{
+
+    padding: 4px 8px;
+
+    border-bottom: 1px solid #262626;
+
+    color: #dddddd;
+
+    white-space: nowrap;
+
+}}
+
+
+.roster-table td.roster-empty {{
+
+    color: #666666;
+
+    font-style: italic;
+
+}}
+
+
+.roster-table td.roster-slot-label {{
+
+    color: #4f8cff;
+
+    font-weight: bold;
+
+    padding-right: 6px;
 
 }}
 
@@ -846,6 +1023,14 @@ h2 {{
     color: #ffffff;
 }}
 
+#draftTable tbody tr.player-drafted .rank-number {{
+    cursor: not-allowed;
+}}
+
+#draftTable tbody tr.player-drafted .rank-number:hover {{
+    color: inherit;
+}}
+
 .is-sleeper {{
     cursor: pointer;
 }}
@@ -895,6 +1080,10 @@ input[type="checkbox"] {{
 <div class="container">
 
 
+<div class="header-flex">
+
+<div class="header-left">
+
 <h2>
 <img src=https://yahoofantasysports-res.cloudinary.com/image/upload/fantasy-logos/459c44b979bfd5347cd412a791fef468fb796aa80a89c53d38ef6ae975e8dfe1.png
 width=100 height=100>
@@ -931,6 +1120,35 @@ Player PPG - Replacement Player PPG
 Click player rank: drafted by you. <br> Click player name: drafted by someone else. <br>Click position: Sleeper pick 
 
 </p>
+
+</div>
+
+
+<!-- ======================================================
+     MY ROSTER
+     ====================================================== -->
+
+<div class="roster-box">
+
+<h3>My Roster</h3>
+
+<table class="roster-table" id="rosterTable">
+
+<thead>
+<tr>
+<th>Starters</th>
+<th>Bench</th>
+</tr>
+</thead>
+
+<tbody id="rosterBody">
+</tbody>
+
+</table>
+
+</div>
+
+</div>
 
 
 <!-- ======================================================
@@ -1021,6 +1239,10 @@ None
 Print Table
 
 </button>
+
+
+<span id="bestAvailableBox" class="best-available-box">
+</span>
 
 </div>
 
@@ -1327,6 +1549,391 @@ document
 
 
 // ========================================================
+// MY ROSTER
+// ========================================================
+//
+// ROSTER_SLOTS defines the starting lineup, in fill-priority order.
+// Each slot lists which positions are eligible to occupy it (FLEX
+// takes RB/WR/TE, matching standard flex rules -- QB is not
+// flex-eligible in this league).
+//
+// When a player is drafted (rank clicked), they fill the first open
+// slot whose eligible list includes their position -- e.g. a WR
+// fills WR1, then WR2, then FLEX, then falls through to the bench.
+// Bench grows automatically if it ever fills up, so nobody is ever
+// left off the roster table.
+// ========================================================
+
+const ROSTER_SLOTS = [
+    {{ label: "QB", eligible: ["QB"], player: null, row: null }},
+    {{ label: "RB", eligible: ["RB"], player: null, row: null }},
+    {{ label: "RB", eligible: ["RB"], player: null, row: null }},
+    {{ label: "WR", eligible: ["WR"], player: null, row: null }},
+    {{ label: "WR", eligible: ["WR"], player: null, row: null }},
+    {{ label: "TE", eligible: ["TE"], player: null, row: null }},
+    {{ label: "FLEX", eligible: ["RB", "WR", "TE"], player: null, row: null }},
+];
+
+const MIN_BENCH_ROWS = 6;
+
+let benchSlots = [];
+
+const rosterAssignments = new Map();
+
+
+function initRosterTable() {{
+
+    for (let i = 0; i < MIN_BENCH_ROWS; i++) {{
+
+        benchSlots.push({{ player: null, row: null }});
+
+    }}
+
+    renderRosterTable();
+
+}}
+
+
+function findOpenStarterSlot(pos) {{
+
+    return ROSTER_SLOTS.find(
+        function(slot) {{
+
+            return slot.player === null && slot.eligible.includes(pos);
+
+        }}
+    ) || null;
+
+}}
+
+
+function findOpenBenchSlot() {{
+
+    let slot = benchSlots.find(
+        function(s) {{
+
+            return s.player === null;
+
+        }}
+    );
+
+    if (!slot) {{
+
+        slot = {{ player: null, row: null }};
+        benchSlots.push(slot);
+
+    }}
+
+    return slot;
+
+}}
+
+
+function assignPlayerToRoster(row) {{
+
+    const pos = row.dataset.pos;
+    const name = row.children[1].textContent.trim();
+
+    const slot =
+        findOpenStarterSlot(pos) ||
+        findOpenBenchSlot();
+
+    slot.player = name;
+    slot.row = row;
+
+    rosterAssignments.set(row, slot);
+
+    renderRosterTable();
+
+}}
+
+
+function removePlayerFromRoster(row) {{
+
+    const slot = rosterAssignments.get(row);
+
+    if (!slot) {{
+
+        return;
+
+    }}
+
+    slot.player = null;
+    slot.row = null;
+
+    rosterAssignments.delete(row);
+
+    renderRosterTable();
+
+}}
+
+
+function renderRosterTable() {{
+
+    const tbody =
+        document.getElementById(
+            "rosterBody"
+        );
+
+    tbody.innerHTML = "";
+
+    const rowCount =
+        Math.max(
+            ROSTER_SLOTS.length,
+            benchSlots.length
+        );
+
+    for (let i = 0; i < rowCount; i++) {{
+
+        const tr = document.createElement("tr");
+
+        const starterSlot = ROSTER_SLOTS[i];
+        const benchSlot = benchSlots[i];
+
+        tr.appendChild(buildRosterCell(starterSlot));
+        tr.appendChild(buildRosterCell(benchSlot, "Bench"));
+
+        tbody.appendChild(tr);
+
+    }}
+
+}}
+
+
+function buildRosterCell(slot, benchLabel) {{
+
+    const td = document.createElement("td");
+
+    if (!slot) {{
+
+        td.textContent = "";
+        return td;
+
+    }}
+
+    const label = slot.label || benchLabel;
+
+    if (slot.player) {{
+
+        const labelSpan = document.createElement("span");
+        labelSpan.className = "roster-slot-label";
+        labelSpan.textContent = label + ": ";
+
+        td.appendChild(labelSpan);
+        td.appendChild(document.createTextNode(slot.player));
+
+    }} else {{
+
+        td.classList.add("roster-empty");
+        td.textContent = label + ": empty";
+
+    }}
+
+    return td;
+
+}}
+
+
+// ========================================================
+// BEST AVAILABLE
+// ========================================================
+//
+// Determines need as the UNION of eligible positions across every
+// currently-empty starter slot (not just the first empty slot in
+// list order) -- otherwise an empty QB slot would lock the search to
+// QB-only even while RB/WR/TE slots sit open too, hiding a much
+// higher-value player at another empty position. Once every starter
+// slot is filled, need opens up to any position, since the next
+// drafted player would be going to the bench anyway.
+//
+// Candidates are then ranked strictly by 2025 VORP (highest wins),
+// regardless of whatever column the table is currently sorted by,
+// among players who haven't been marked drafted by you (green) or by
+// someone else (gray).
+// ========================================================
+
+function getPositionNeed() {{
+
+    const openSlots =
+        ROSTER_SLOTS.filter(
+            function(slot) {{
+
+                return slot.player === null;
+
+            }}
+        );
+
+    if (openSlots.length === 0) {{
+
+        return ["QB", "RB", "WR", "TE"];
+
+    }}
+
+    const eligibleSet = new Set();
+
+    openSlots.forEach(
+        function(slot) {{
+
+            slot.eligible.forEach(
+                function(pos) {{
+
+                    eligibleSet.add(pos);
+
+                }}
+            );
+
+        }}
+    );
+
+    return Array.from(eligibleSet);
+
+}}
+
+
+function getBestAvailableRow() {{
+
+    const eligible = getPositionNeed();
+
+    // Rank strictly by 2025 VORP, independent of whatever column the
+    // table currently happens to be sorted by. The column is found by
+    // header text rather than a fixed index, so this keeps working if
+    // columns are reordered or Print Table hides other columns.
+    const table =
+        document.getElementById(
+            "draftTable"
+        );
+
+    const headerCells =
+        Array.from(
+            table.querySelectorAll(
+                "thead th"
+            )
+        );
+
+    const vorpIndex =
+        headerCells.findIndex(
+            function(th) {{
+
+                // Sorted headers get a "▲"/"▼" arrow appended as a
+                // child element (see sortTable() below), which changes
+                // textContent to e.g. "2025 VORP▲". Match by substring
+                // rather than exact equality so this lookup still finds
+                // the column when it's the one currently sorted.
+                return th.textContent.trim().includes("2025 VORP");
+
+            }}
+        );
+
+    const rows =
+        Array.from(
+            table.querySelectorAll(
+                "tbody tr"
+            )
+        );
+
+    const candidates =
+        rows.filter(
+            function(row) {{
+
+                return (
+                    eligible.includes(row.dataset.pos) &&
+                    !row.classList.contains("rank-picked") &&
+                    !row.classList.contains("player-drafted")
+                );
+
+            }}
+        );
+
+    if (candidates.length === 0) {{
+
+        return null;
+
+    }}
+
+    if (vorpIndex === -1) {{
+
+        // VORP column not found (e.g. header text changed) -- fall
+        // back to on-screen order rather than failing outright.
+        return candidates[0];
+
+    }}
+
+    let best = null;
+    let bestVorp = -Infinity;
+
+    candidates.forEach(
+        function(row) {{
+
+            const vorp =
+                parseFloat(
+                    row.children[vorpIndex].textContent
+                );
+
+            if (!isNaN(vorp) && vorp > bestVorp) {{
+
+                bestVorp = vorp;
+                best = row;
+
+            }}
+
+        }}
+    );
+
+    // If every candidate lacks a VORP value (e.g. only rookies with
+    // no 2025 stats remain), fall back to the first one rather than
+    // returning nothing.
+    return best || candidates[0];
+
+}}
+
+
+function updateBestAvailable() {{
+
+    const container =
+        document.getElementById(
+            "bestAvailableBox"
+        );
+
+    const row = getBestAvailableRow();
+
+    container.innerHTML = "";
+
+    if (!row) {{
+
+        container.textContent = "Best Available: none left";
+        return;
+
+    }}
+
+    const name = row.children[1].textContent.trim();
+    const posLabel = row.children[2].textContent.trim();
+
+    const label = document.createElement("span");
+    label.className = "best-available-label";
+    label.textContent = "Best Available: " + name + " (" + posLabel + ")";
+
+    const button = document.createElement("button");
+    button.className = "control-button draft-button";
+    button.textContent = "Draft Player";
+
+    button.addEventListener(
+        "click",
+        function() {{
+
+            row.classList.add("rank-picked");
+            assignPlayerToRoster(row);
+            updateBestAvailable();
+
+        }}
+    );
+
+    container.appendChild(label);
+    container.appendChild(button);
+
+}}
+
+
+// ========================================================
 // ROW CLICK ACTIONS
 // ========================================================
 //
@@ -1337,7 +1944,8 @@ document
 //   - Gray text
 //   - Strikethrough
 //
-// Clicking the rank number toggles the row green (picked).
+// Clicking the rank number toggles the row green (picked) and adds
+// or removes them from the My Roster box above.
 //
 // Clicking again restores the row.
 //
@@ -1376,9 +1984,30 @@ document
                 "click",
                 function() {{
 
+                    // A grayed-out row means someone else already
+                    // drafted this player -- an accidental rank click
+                    // shouldn't be able to add them to your roster.
+                    if (row.classList.contains("player-drafted")) {{
+
+                        return;
+
+                    }}
+
                     row.classList.toggle(
                         "rank-picked"
                     );
+
+                    if (row.classList.contains("rank-picked")) {{
+
+                        assignPlayerToRoster(row);
+
+                    }} else {{
+
+                        removePlayerFromRoster(row);
+
+                    }}
+
+                    updateBestAvailable();
 
                 }}
             );
@@ -1390,6 +2019,8 @@ document
                     row.classList.toggle(
                         "player-drafted"
                     );
+
+                    updateBestAvailable();
 
                 }}
             );
@@ -1647,6 +2278,8 @@ function sortTable(
 // ========================================================
 
 filterTable();
+initRosterTable();
+updateBestAvailable();
 
 
 </script>
